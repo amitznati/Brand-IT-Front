@@ -1,0 +1,68 @@
+.end-section-button {
+	margin: 10px 0;
+	}
+
+	.todo-list li > * {
+	margin: 0 5px;
+	}
+	.todo-list .product-img img {
+	height: 30px;
+	}
+	.preview-section {
+	background-color:#269;
+	background-image: linear-gradient(white 2px, transparent 2px),
+	linear-gradient(90deg, white 2px, transparent 2px),
+	linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px),
+	linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px);
+	background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+	background-position:-2px -2px, -2px -2px, -1px -1px, -1px -1px;
+	}
+
+	.template-preview {
+	background: white;
+	height: 300px;
+	width: 400px;
+	
+	}
+
+	.shadow {
+	-webkit-box-shadow: 2px 2px 11px -1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 2px 2px 11px -1px rgba(0,0,0,0.75);
+	box-shadow: 2px 2px 11px -1px rgba(0,0,0,0.75);
+	}
+
+	.box {
+	-webkit-box-shadow: 2px 2px 11px -1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 2px 2px 11px -1px rgba(0,0,0,0.75);
+	box-shadow: 2px 2px 11px -1px rgba(0,0,0,0.75);
+	}
+	.active-layout {
+	background: rgb(175, 221, 248) !important;
+	}
+
+	.slider {
+	margin: 0 10px;
+	}
+
+	.layout-properties .form-group {
+	border-bottom: 1px solid #f4f4f4;
+	padding-bottom: 10px;
+	}
+
+	.layout-properties .product-img img {
+	height: 80px;
+	}
+
+	.shape {
+	display: -webkit-inline-box;
+		vertical-align: middle;
+		width: 0;
+		height: 0;
+		border-left: 15px solid transparent;
+		border-right: 15px solid transparent;
+		border-bottom: 30px solid #9d9c9c;
+	}
+
+	.slider.slider-horizontal {
+	width: 90% !important;
+	}

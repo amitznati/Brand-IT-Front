@@ -5,13 +5,7 @@ import store from './store';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './utils/setAuthToken';
 import { setCurrentUser, logoutUser } from './actions/authentication';
-
-import Navbar from './components/Navbar';
-import Register from './components/Register';
-import Login from './components/Login';
-import Home from './components/Home';
-
-import 'bootstrap/dist/css/bootstrap.css';
+import Home from './containers/Home';
 
 if(localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
@@ -31,12 +25,7 @@ class App extends Component {
       <Provider store = { store }>
         <Router>
             <div>
-              <Navbar />
                 <Route exact path="/" component={ Home } />
-                <div className="container">
-                  <Route exact path="/register" component={ Register } />
-                  <Route exact path="/login" component={ Login } />
-                </div>
             </div>
           </Router>
         </Provider>
