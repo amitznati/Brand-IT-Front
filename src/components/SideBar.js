@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-
+import {Link} from 'react-router-dom';
 export default class SideBar extends Component {
 	render(){
 		return (
@@ -34,7 +34,8 @@ export default class SideBar extends Component {
 								</span>
 							</a>
 							<ul className="treeview-menu">
-								<li><a href="pages/layout/top-nav.html"><i className="fa fa-circle-o"></i> Top Navigation</a></li>
+								<li><Link to="/edit-template"><i className="fa fa-circle-o"></i> Edit Template</Link></li>
+								<li><a href="/edit-template"><i className="fa fa-circle-o"></i> Edit Template</a></li>
 								<li><a href="pages/layout/boxed.html"><i className="fa fa-circle-o"></i> Boxed</a></li>
 								<li><a href="pages/layout/fixed.html"><i className="fa fa-circle-o"></i> Fixed</a></li>
 								<li><a href="pages/layout/collapsed-sidebar.html"><i className="fa fa-circle-o"></i> Collapsed Sidebar</a></li>

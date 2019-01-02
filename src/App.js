@@ -5,7 +5,10 @@ import store from './store';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './utils/setAuthToken';
 import { setCurrentUser, logoutUser } from './actions/authentication';
+import EditTemplate from './containers/editTemplate/EditTemplate';
 import Home from './containers/Home';
+import Header from './components/Header';
+import SideBar from './components/SideBar';
 
 if(localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
@@ -25,7 +28,10 @@ class App extends Component {
       <Provider store = { store }>
         <Router>
             <div>
+                <Header />
+				        <SideBar />
                 <Route exact path="/" component={ Home } />
+                <Route exact path="/edit-template" component={ EditTemplate } />
             </div>
           </Router>
         </Provider>
