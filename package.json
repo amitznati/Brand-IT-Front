@@ -31,6 +31,7 @@
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {
-    "cross-env": "^5.2.0"
+    "cross-env": "^5.2.0",
+    "eslint": "^5.11.1"
   }
 }
