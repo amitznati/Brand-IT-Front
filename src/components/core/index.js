@@ -5,4 +5,7 @@ export {default as BoxFooter} from './BoxFooter';
 export {default as Content} from './Content';
 export {default as ContentHeader} from './ContentHeader';
 export {default as ContentWrapper} from './ContentWrapper';
-export {default as SortableContainer} from './SortableContainer';
+export {default as CoreAutocomplete} from './CoreAutocomplete';
+export {default as CoreSlider} from './CoreSlider';
+export {default as CoreText} from './CoreText';
+export {default as CoreSelect} from './CoreSelect';

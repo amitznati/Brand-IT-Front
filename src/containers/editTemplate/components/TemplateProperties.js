@@ -1,80 +1,98 @@
 import React from 'react';
-import {Row, Col, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
-import {Box, BoxHeader, BoxBody} from '../../../components/core';
-import ReactBootstrapSlider from 'react-bootstrap-slider';
-import Select2 from 'react-select2-wrapper';
+import PropTypes from 'prop-types';
+import {Grid} from '@material-ui/core';
+//import Slider from '@material-ui/lab/Slider';
+import { withStyles } from '@material-ui/core/styles';
+import withRoot from '../../../withRoot';
+import {CoreSlider, CoreSelect, CoreAutocomplete, CoreText} from '../../../components/core';
+import styles from '../../../styles/styles';
 
-export default function TemplateProperties() {
-	return (
-		<Box className="box-solid">
-			<BoxHeader 
-				title="Template Properties" 
-				icon="fa fa-list"
-				boxTool={{collapse: true}}/>
-			<BoxBody className="border-radius-none">
-				<Row>
-					<Col md={3}>
-						<FormGroup>
-							<ControlLabel>Name</ControlLabel>
-							<FormControl 
-								type="text"/>
-						</FormGroup>
-						<FormGroup>
-							<ControlLabel>Unit</ControlLabel>
-							<FormControl componentClass="select" >
-								<option>cm</option>
-								<option>px</option>
-							</FormControl>
-						</FormGroup>
-					</Col>
-					<Col md={3}>
-						<FormGroup>
-							<ControlLabel>Width</ControlLabel>
-							<ReactBootstrapSlider
-								value={50}
-								//change={this.changeValue}
-								//slideStop={this.changeValue}
-								step={0.1}
-								max={200}
-								min={0}
-								//orientation="vertical"
-								orientation="horizontal"
-								reversed={false}
-								//disabled="disabled" 
-							/>
-						</FormGroup>
-						<FormGroup>
-							<ControlLabel>Height</ControlLabel>
-							<ReactBootstrapSlider
-								value={50}
-								step={0.1}
-								max={200}
-								min={0}
-								orientation="horizontal"
-								reversed={false}
-							/>
-						</FormGroup>
-					</Col>
-					<Col md={3}>
-						<FormGroup>
-							<ControlLabel>For Item</ControlLabel>
-							<FormControl componentClass="select" >
-								<option>cop</option>
-								<option>some item</option>
-							</FormControl>
-						</FormGroup>
-						<FormGroup>
-							<ControlLabel>Tags</ControlLabel>
-							<Select2
-								style={{width: '100%'}}
-								multiple
-								data={['bug', 'feature', 'documents', 'discussion']}
-								options={{placeholder: 'search by tags'}}
-							/>
-						</FormGroup>
-					</Col>
-				</Row>
-			</BoxBody>
-		</Box>
-	);
+const suggestions = [
+	{ label: 'Afghanistan' },
+	{ label: 'Aland Islands' },
+	{ label: 'Albania' },
+	{ label: 'Aruba' },
+	{ label: 'Australia' },
+	{ label: 'Austria' },
+	{ label: 'Azerbaijan' },
+	{ label: 'Bahamas' },
+	{ label: 'Bahrain' },
+	{ label: 'Bonaire, Sint Eustatius and Saba' },
+	{ label: 'Bosnia and Herzegovina' },
+	{ label: 'Botswana' },
+	{ label: 'Bouvet Island' },
+	{ label: 'Brazil' },
+	{ label: 'British Indian Ocean Territory' },
+	{ label: 'Brunei Darussalam' },
+].map(suggestion => ({
+	value: suggestion.label,
+	label: suggestion.label,
+}));
+
+class TemplateProperties extends React.Component {
+	
+	state = {
+		name: '',
+		unit: 'cm',
+		width: 0,
+		height: 0
+	};
+
+	handleChange = name => event => {
+		this.setState({[name]: event.target.value });
+	};
+
+	handleSliderChange = name => (event, value) => {
+		this.setState({ [name]: value });
+	};
+
+	render() {
+		//const { classes } = this.props;
+		const { name, width, height, unit } = this.state;
+		return (
+			<Grid container >
+				<Grid item md={3}>
+					<CoreText
+						label="Name"
+						value={name}
+						handleTextChange={this.handleChange('name').bind(this)}
+					/>
+				</Grid>
+				<Grid item md={3}>
+					<CoreSelect 
+						options={['cm','px']}
+						handleSelectChange={this.handleChange('unit').bind(this)}
+						label="Unit"
+						value={unit}
+					/>
+					<CoreSlider 
+						value={width} 
+						label="Width"
+						handleSliderChange={this.handleSliderChange('width').bind(this)}
+					/>
+					<CoreSlider 
+						value={height} 
+						label="Height"
+						handleSliderChange={this.handleSliderChange('height').bind(this)}
+					/>
+				</Grid>
+				<Grid item md={3}>
+					<CoreAutocomplete 
+						isMulti={true} 
+						options={suggestions}
+					/>
+				</Grid>
+				<Grid item md={3}>
+				</Grid>
+			</Grid>
+							
+						
+		);
+	}
 }
+
+TemplateProperties.propTypes = {
+	classes: PropTypes.object.isRequired,
+};
+
+export default withRoot(withStyles(styles)(TemplateProperties));

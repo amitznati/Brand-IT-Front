@@ -1,98 +1,73 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Box, BoxHeader, BoxBody, SortableContainer, BoxFooter} from '../../../components/core';
-// const layouts = [
-// 	'hi hi1', 'hi2', 'sdfsdf'
-// ];
+import { withStyles } from '@material-ui/core/styles';
+import {Grid, ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails} from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import {ImageLayoutHeader} from './ImageLayout';
+//import LayoutProperties from './LayoutsList/components/LayoutProperties';
+import styles from './../../../styles/styles';
 
-export default function LayoutsList({ onChange }) {
-	return (
-		<Box className="border-radius-none">
-			<BoxHeader title="Layouts" boxTool={{collapse: true}} />
-			<BoxBody>
-				<SortableContainer tag="ul" className="todo-list"
-					onChange={onChange || console.log}>
-					<li data-layout-type="image"	className="layout-item" data-id={1}>
-						
-						<span className="handle">
-							<i className="fa fa-reorder"></i>
-						</span>
-						
-						<i className="fa fa-eye"></i>
-						
-						<span className="product-img">
-							<img alt="layout" src="https://wallpaperbrowse.com/media/images/soap-bubble-1958650_960_720.jpg"/>
-						</span>
-						
-						
-						<div className="tools">
-							<i className="fa fa-trash-o"></i>
-						</div>
-						<div className="text">image-stam.png</div>
-					</li>
-					<li data-layout-type="image"	className="layout-item active-layout" data-id={2}>
-						
-						<span className="handle">
-							<i className="fa fa-reorder"></i>
-						</span>
-						
-						<i className="fa fa-eye"></i>
-						
-						<span className="product-img">
-							<img alt="layout2"	src="https://wallpaperbrowse.com/media/images/soap-bubble-1958650_960_720.jpg"/>
-						</span>
-						
-						
-						<div className="tools">
-							<i className="fa fa-trash-o"></i>
-						</div>
-						<div className="text">default-50x50.gif</div>
-					</li>
-					<li data-layout-type="text" className="layout-item" data-id={3}>
-						
-						<span className="handle">
-							<i className="fa fa-reorder"></i>
-						</span>
-						
-						<i className="fa fa-eye"></i>
-						
-						<i className="fa fa-font"></i>
-						
-						
-						<div className="tools">
-							<i className="fa fa-trash-o"></i>
-						</div>
-						<div className="text">This is the text</div>
-					</li>
-					<li data-layout-type="shape" className="layout-item" data-id={4}>
-							
-						<span className="handle">
-							<i className="fa fa-reorder"></i>
-						</span>
-						
-						<i className="fa fa-eye"></i>
-						
-						<i className="fa fa-cubes"></i>
-						
-						
-						<div className="tools">
-							<i className="fa fa-trash-o"></i>
-						</div>
-						<div className="shape"></div>
-					</li>
-				</SortableContainer>
-			</BoxBody>
-			<BoxFooter>
-				<button type="button" className="pull-right btn btn-default" >
-					Add Item
-					<i className="fa fa-plus"></i>
-				</button>
-												
-			</BoxFooter>
-		</Box>
-	);
+const layouts = [
+	{
+		type: 'image',
+		properties: {
+			src: 'https://material-ui.com/static/images/avatar/1.jpg',
+		}
+	},
+	{
+		type: 'text',
+		properties: {
+			text: 'sdf sdf',
+		}
+	},
+];
+class LayoutsList extends React.Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			expanded: null,
+		};
+
+	}
+	
+	
+	handleChange = panel => (event, expanded) => {
+		this.setState({
+			expanded: expanded ? panel : false,
+		});
+	};
+
+	renderLayout(l,i) {
+		const {expanded} = this.state;
+		const {classes} = this.props;
+		return (
+			<ExpansionPanel key={i} expanded={expanded === i} onChange={this.handleChange(i).bind(this)}>
+				<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+					<ImageLayoutHeader classes={classes} layout={l}/>
+				</ExpansionPanelSummary>
+				<ExpansionPanelDetails >
+					<Typography className={classes.heading}>Layout Properties</Typography>
+				</ExpansionPanelDetails>
+			</ExpansionPanel>
+		);
+		
+	}
+
+	render() {
+		
+		//const {classes} = this.props;
+		return (
+			<Grid container >
+				<Grid item xs={12} >
+					{layouts.map((l,i) => this.renderLayout(l,i))}
+				</Grid>
+			</Grid>
+		);
+	}
 }
-
 LayoutsList.propTypes = {
-	onChange: PropTypes.func
+	classes: PropTypes.object.isRequired,
 };
+
+export default withStyles(styles)(LayoutsList);

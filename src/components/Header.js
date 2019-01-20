@@ -1,48 +1,57 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import Badge from '@material-ui/core/Badge';
+import MenuIcon from '@material-ui/icons/Menu';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import classNames from 'classnames';
 
 export default class Header extends Component {
 	render(){
+		const {classes, open, handleDrawerOpen} = this.props;
 		return (
-			<header className="main-header">
-				<a href="/" className="logo">
-					<span className="logo-mini"><b>A</b>LT</span>
-					<span className="logo-lg"><b>Admin</b>LTE</span>
-				</a>
-				<nav className="navbar navbar-static-top">
-					<a href="/" className="sidebar-toggle" data-toggle="push-menu" role="button">
-						<span className="sr-only">Toggle navigation</span>
-					</a>
-					<div className="navbar-custom-menu">
-						<ul className="nav navbar-nav">
-							<li className="dropdown messages-menu">
-								<a href="/" className="dropdown-toggle" data-toggle="dropdown">
-									<i className="fa fa-envelope-o"></i>
-									<span className="label label-success">4</span>
-								</a>
-								<ul className="dropdown-menu">
-									<li className="header">You have 4 messages</li>
-									<li>
-										<ul className="menu">
-											<li>
-												<a href="/">
-													<div className="pull-left">
-														<img src="img/user2-160x160.jpg" className="img-circle" alt="UserImage" />
-													</div>
-													<h4>
-														Support Team
-														<small><i className="fa fa-clock-o"></i> 5 mins</small>
-													</h4>
-													<p>Why not buy a new awesome theme?</p>
-												</a>
-											</li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</div>
-				</nav>
-			</header>
+			<AppBar
+				position="absolute"
+				className={classNames(classes.appBar, open && classes.appBarShift)}
+			>
+				<Toolbar disableGutters={!open} className={classes.toolbar}>
+					<IconButton
+						color="inherit"
+						aria-label="Open drawer"
+						onClick={handleDrawerOpen}
+						className={classNames(
+							classes.menuButton,
+							open && classes.menuButtonHidden,
+						)}
+					>
+						<MenuIcon />
+					</IconButton>
+					<Typography
+						component="h1"
+						variant="h6"
+						color="inherit"
+						noWrap
+						className={classes.title}
+					>
+						Dashboard
+					</Typography>
+					<IconButton color="inherit">
+						<Badge badgeContent={4} color="secondary">
+							<NotificationsIcon />
+						</Badge>
+					</IconButton>
+				</Toolbar>
+			</AppBar>
+			
 		);
 	}
 }
+
+Header.propTypes = {
+	classes: PropTypes.object.isRequired,
+	open: PropTypes.bool.isRequired,
+	handleDrawerOpen: PropTypes.func.isRequired
+};

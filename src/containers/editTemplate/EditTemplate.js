@@ -1,48 +1,66 @@
-import React, { Component } from 'react';
-import {Row, Col} from 'react-bootstrap';
-import {Box, BoxHeader, ContentHeader, ContentWrapper, Content, BoxBody} from './../../components/core';
-
-import LayoutsList from './components/LayoutsList';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import {Grid, Paper, ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails} from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TemplateProperties from './components/TemplateProperties';
-//import LayoutProperties from './components/LayoutProperties';
-//import TemplatePreview from './components/TemplatePreview';
-import './editTemplate.css';
+import LayoutsList from './components/LayoutsList';
 
-export default class EditTemplate extends Component {
+import styles from './../../styles/styles';
 
 
-	
+class EditTemplate extends React.Component {
+
+	state = {
+		expanded: null,
+	};
+
+	handleChange = panel => (event, expanded) => {
+		this.setState({
+			expanded: expanded ? panel : false,
+		});
+	};
+
 	render() {
+		//const {expanded} = this.state;
+		const {classes} = this.props;
 		return (
-			<ContentWrapper>
-				<ContentHeader title="Edit Template" small="Form"/>
-				<Content>
-					<Row>
-						<Col lg={12}>
-							<Box className="box-primary" dataWidget="box-widget-main">
-								<BoxHeader 
-									title="Edit Template"
-									icon="fa fa-object-group"
-								/>
-								<BoxBody>
-									<Row>
-										<Col sm={12}>
-											<TemplateProperties />
-										</Col>
-										<Col md={3}>
-											<LayoutsList />
-											{/* <LayoutProperties /> */}
-										</Col>
-										<Col md={9}>
-											{/* <TemplatePreview /> */}
-										</Col>
-									</Row>
-								</BoxBody>
-							</Box>
-						</Col>
-					</Row>
-				</Content>
-			</ContentWrapper>
+			<Grid	container spacing={16}>
+				<Grid item xs={12} >
+					<Paper className={classes.paper}>
+						<ExpansionPanel >
+							<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+								<Typography>Template Properties</Typography>
+							</ExpansionPanelSummary>
+							<ExpansionPanelDetails>
+								<TemplateProperties />
+							</ExpansionPanelDetails>
+						</ExpansionPanel>
+						
+					</Paper>
+				</Grid>
+				<Grid item md={3}>
+					<Paper className={classes.paper}>
+	
+						<ExpansionPanelSummary>
+							<Typography>Layouts List</Typography>
+						</ExpansionPanelSummary>
+
+						<LayoutsList />
+
+					</Paper>
+				</Grid>
+				<Grid item md={9}>
+					<Paper className={classes.paper}>
+						<Typography>Template Preview</Typography>
+					</Paper>
+				</Grid>
+			</Grid>
 		);
 	}
 }
+EditTemplate.propTypes = {
+	classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(EditTemplate);
