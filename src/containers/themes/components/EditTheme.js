@@ -1,19 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {Grid, Button, Paper} from '@material-ui/core';
+import {Grid, Button, Card, CardHeader, CardContent} from '@material-ui/core';
 import { CoreText, CoreAutocomplete } from '../../../components/core';
 import {CardActions, Typography} from '@material-ui/core';
 
 import bl from './../../../assets/lizard/babkground-landscape.jpg';
-import bp from './../../../assets/lizard/babkground-portrate.jpg';
+import bp from './../../../assets/lizard/babkground-portraite.jpg';
 import br from './../../../assets/lizard/bottom-right.jpg';
 import header from './../../../assets/lizard/header.jpg';
 const themeImages= {
-	babkgroundLandscape: bl,
-	backgroundPortrate: bp,
-	bottomRight: br,
-	header
+	'babkground-landscape': bl,
+	'babkground-portraite': bp,
+	'bottom-right': br,
+	'header': header
 };
 const styles = theme => ({
 	padding: {
@@ -21,17 +21,23 @@ const styles = theme => ({
 	},
 	margin: {
 		margin: theme.spacing.unit,
+	},
+	cardHeader: {
+		padding: theme.spacing.unit
+	},
+	noPadding: {
+		padding: 0
 	}
 });
 const availableThemeImages = [
-	'babkgroundLandscape',
-	'backgroundPortrate',
-	'header',
-	'top-left',
-	'top-right',
-	'footer',
-	'bottom-left',
-	'bottomRight'
+	{title: 'Babkground Landscape', fileName: 'babkground-landscape'},
+	{title: 'Background Portraite', fileName: 'babkground-portraite'},
+	{title: 'Header', fileName: 'header'},
+	{title: 'Top Left', fileName: 'top-left'},
+	{title: 'Top Right', fileName: 'top-right'},
+	{title: 'Footer', fileName: 'footer'},
+	{title: 'Bottom Left', fileName: 'bottom-left'},
+	{title: 'Bottom Right', fileName: 'bottom-right'}
 ];
 
 const availableTags = ['clasic','modern'].map(t => ({
@@ -72,28 +78,33 @@ class EditTheme extends React.Component {
 
 	renderThemeImage(image) {
 		const {classes} = this.props;
+		const themeImage = themeImages[image.fileName];
 		return (
-			<Grid className={classes.padding} key={image} item md={12}>
-				<Paper>
-					<Typography className={classes.margin} gutterBottom variant="h5" component="h2">
-						{image}
-					</Typography>
-					<img src={themeImages[image]} alt={image} />
+			<Grid className={classes.padding} key={image.fileName} item md={12}>
+				<Card>
+					<CardHeader className={classes.padding}
+						title={<Typography gutterBottom variant="h5" component="h2">
+							{image.title}
+						</Typography>}
+					/>
+					<CardContent className={classes.noPadding}>
+						{themeImage && <img src={themeImage} alt={image.title} />}
+					</CardContent>
 					<CardActions>
 						<Button size="small" color="primary">
-						Replace
+							{themeImage ? 'Replace' : 'Add'}
 						</Button>
-						<Button size="small" color="primary">
-						Remove
-						</Button>
+						{themeImage &&<Button size="small" color="primary">
+							Remove
+						</Button>}
 					</CardActions>
-				</Paper>
+				</Card>
 			</Grid>
 		);
 	}
 
 	render() {
-		//const {classes}  = this.props;
+		const {classes}  = this.props;
 		const {name,tags} = this.state;
 		return (
 			<Grid container>
@@ -114,11 +125,13 @@ class EditTheme extends React.Component {
 						handleChangeMulti={this.handleTagsChange.bind(this)}
 					/>
 				</Grid>
-				<Grid item xs={12}>
-					<Grid container>
-						{availableThemeImages.map(image => this.renderThemeImage(image))}
-					</Grid>
+				<Grid item md={3} >
+					<Button variant="outlined" size="medium" color="primary">
+						Save
+					</Button>
 				</Grid>
+				{availableThemeImages.map(image => this.renderThemeImage(image))}
+
 			</Grid>
 		);
 	}
