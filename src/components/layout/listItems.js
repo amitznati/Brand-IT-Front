@@ -8,7 +8,8 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import {Link} from 'react-router-dom';
 
 const links = [
-	{text: 'Edit Template', icon: <DashboardIcon />, link: '/edit-template'}
+	{text: 'Edit Template', icon: <DashboardIcon />, link: '/edit-template'},
+	{text: 'Themes', icon: <DashboardIcon />, link: '/themes'}
 ];
 export const mainListItems = (
 	<div>
