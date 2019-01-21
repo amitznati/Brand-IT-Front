@@ -6,7 +6,7 @@ import jwt_decode from 'jwt-decode';
 import setAuthToken from './utils/setAuthToken';
 import { setCurrentUser, logoutUser } from './actions/authentication';
 import EditTemplate from './containers/editTemplate/EditTemplate';
-import ThemesLists from './containers/themes/ThemesList';
+import Themes from './containers/themes/Themes';
 import Home from './containers/Home';
 import Layout from './components/layout';
 
@@ -30,7 +30,7 @@ class App extends Component {
 					<Layout>
 						<Route exact path="/" component={ Home } />
 						<Route exact path="/edit-template" component={ EditTemplate } />
-						<Route exact path="/themes" component={ ThemesLists } />
+						<Route exact path="/themes" component={ Themes } />
 					</Layout>
 				</Router>
 			</Provider>

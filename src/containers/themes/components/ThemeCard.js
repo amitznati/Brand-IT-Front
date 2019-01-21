@@ -1,13 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import {Card, CardHeader, Menu, CardContent, CardMedia, MenuItem, Typography, IconButton} from '@material-ui/core';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const styles = {
 	card: {
@@ -19,11 +14,52 @@ const styles = {
 	},
 };
 
-function ImgMediaCard(props) {
-	const { classes } = props;
-	return (
-		<Card className={classes.card}>
-			<CardActionArea>
+class ThemeCard extends React.Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			anchorEl: null,
+		};
+
+		this.handleClick = this.handleClick.bind(this);
+		this.handleClose = this.handleClose.bind(this);
+	}
+	
+	
+	handleClick = event => {
+		this.setState({ anchorEl: event.currentTarget });
+	};
+	
+	handleClose = () => {
+		this.setState({ anchorEl: null });
+	};
+
+	render () {
+		const {classes, cardid} = this.props;
+		const {anchorEl} = this.state;
+		return (
+			<Card className={classes.card}>
+				<CardHeader
+					action={<div>
+						<IconButton onClick={this.handleClick} aria-owns={anchorEl ? `simple-menu${cardid}` : undefined} aria-haspopup="true">
+							<MoreVertIcon/>
+						</IconButton>
+						<Menu
+							id={`simple-menu${cardid}`}
+							anchorEl={anchorEl}
+							open={Boolean(anchorEl)}
+							onClose={this.handleClose}
+						>
+							<MenuItem onClick={this.handleClose}>Edit</MenuItem>
+							<MenuItem onClick={this.handleClose}>Delete</MenuItem>
+							<MenuItem onClick={this.handleClose}>Something</MenuItem>
+						</Menu>
+					</div>}
+					title={<Typography gutterBottom variant="h5" component="h2">
+					Lizard
+					</Typography>}
+					// subheader="September 14, 2016"
+				/>
 				<CardMedia
 					component="img"
 					alt="Contemplative Reptile"
@@ -33,28 +69,29 @@ function ImgMediaCard(props) {
 					title="Contemplative Reptile"
 				/>
 				<CardContent>
-					<Typography gutterBottom variant="h5" component="h2">
+					{/* <Typography gutterBottom variant="h5" component="h2">
 						Lizard
-					</Typography>
+					</Typography> */}
 					<Typography component="p">
 						some description
 					</Typography>
 				</CardContent>
-			</CardActionArea>
-			<CardActions>
-				<Button size="small" color="primary">
-					Edit
-				</Button>
-				<Button size="small" color="primary">
-					Learn More
-				</Button>
-			</CardActions>
-		</Card>
-	);
+				{/* <CardActions>
+					<Button size="small" color="primary">
+						Edit
+					</Button>
+					<Button size="small" color="primary">
+						Learn More
+					</Button>
+				</CardActions> */}
+			</Card>
+		);
+	}
 }
 
-ImgMediaCard.propTypes = {
+ThemeCard.propTypes = {
 	classes: PropTypes.object.isRequired,
+	cardid: PropTypes.any
 };
 
-export default withStyles(styles)(ImgMediaCard);
+export default withStyles(styles)(ThemeCard);
