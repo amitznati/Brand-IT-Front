@@ -7,6 +7,7 @@ import setAuthToken from './utils/setAuthToken';
 import { setCurrentUser, logoutUser } from './actions/authentication';
 import EditTemplate from './containers/editTemplate/EditTemplate';
 import Themes from './containers/themes/Themes';
+import EditTheme from './containers/themes/components/EditTheme';
 import Home from './containers/Home';
 import Layout from './components/layout';
 
@@ -31,6 +32,8 @@ class App extends Component {
 						<Route exact path="/" component={ Home } />
 						<Route exact path="/edit-template" component={ EditTemplate } />
 						<Route exact path="/themes" component={ Themes } />
+						<Route exact path="/edit-theme/:id" component={ EditTheme } />
+						<Route exact path="/edit-theme" component={ EditTheme } />
 					</Layout>
 				</Router>
 			</Provider>

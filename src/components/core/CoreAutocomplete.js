@@ -120,7 +120,7 @@ class Autocomplete extends React.Component {
 
 	render() {
 		
-		const {isMulti, classes, theme, single, handleChangeSingle, multi, handleChangeMulti} = this.props;
+		const {isMulti, placeholder, classes, theme, single, handleChangeSingle, multi, handleChangeMulti, label} = this.props;
 		const suggestions = this.props.options;
 		const selectStyles = {
 			input: base => ({
@@ -149,7 +149,7 @@ class Autocomplete extends React.Component {
 							classes={classes}
 							styles={selectStyles}
 							textFieldProps={{
-								label: 'Label',
+								label: label,
 								InputLabelProps: {
 									shrink: true,
 								},
@@ -158,7 +158,7 @@ class Autocomplete extends React.Component {
 							components={components}
 							value={multi}
 							onChange={handleChangeMulti}
-							placeholder="Select multiple countries"
+							placeholder={placeholder}
 							isMulti
 						/>}
 					</NoSsr>

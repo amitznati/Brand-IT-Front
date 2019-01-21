@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {Card, CardHeader, Menu, CardContent, CardMedia, MenuItem, Typography, IconButton} from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import {Link} from 'react-router-dom';
 
 const styles = {
 	card: {
@@ -50,7 +51,9 @@ class ThemeCard extends React.Component {
 							open={Boolean(anchorEl)}
 							onClose={this.handleClose}
 						>
-							<MenuItem onClick={this.handleClose}>Edit</MenuItem>
+							<MenuItem onClick={this.handleClose}>
+								<Link to={{pathname: '/edit-theme', search: '?id=' + cardid}}>Edit</Link>
+							</MenuItem>
 							<MenuItem onClick={this.handleClose}>Delete</MenuItem>
 							<MenuItem onClick={this.handleClose}>Something</MenuItem>
 						</Menu>
