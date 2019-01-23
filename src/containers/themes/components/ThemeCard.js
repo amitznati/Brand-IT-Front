@@ -52,7 +52,7 @@ class ThemeCard extends React.Component {
 							onClose={this.handleClose}
 						>
 							<MenuItem onClick={this.handleClose}>
-								<Link to={{pathname: '/edit-theme', search: '?id=' + cardid}}>Edit</Link>
+								<Link style={{textDecoration: 'none'}} to={{pathname: '/edit-theme', search: '?id=' + cardid}}>Edit</Link>
 							</MenuItem>
 							<MenuItem onClick={this.handleClose}>Delete</MenuItem>
 							<MenuItem onClick={this.handleClose}>Something</MenuItem>
@@ -61,7 +61,6 @@ class ThemeCard extends React.Component {
 					title={<Typography gutterBottom variant="h5" component="h2">
 					Lizard
 					</Typography>}
-					// subheader="September 14, 2016"
 				/>
 				<CardMedia
 					component="img"
@@ -72,21 +71,10 @@ class ThemeCard extends React.Component {
 					title="Contemplative Reptile"
 				/>
 				<CardContent>
-					{/* <Typography gutterBottom variant="h5" component="h2">
-						Lizard
-					</Typography> */}
 					<Typography component="p">
 						some description
 					</Typography>
 				</CardContent>
-				{/* <CardActions>
-					<Button size="small" color="primary">
-						Edit
-					</Button>
-					<Button size="small" color="primary">
-						Learn More
-					</Button>
-				</CardActions> */}
 			</Card>
 		);
 	}

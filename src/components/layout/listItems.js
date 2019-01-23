@@ -9,12 +9,13 @@ import {Link} from 'react-router-dom';
 
 const links = [
 	{text: 'Edit Template', icon: <DashboardIcon />, link: '/edit-template'},
-	{text: 'Themes', icon: <DashboardIcon />, link: '/themes'}
+	{text: 'Themes', icon: <DashboardIcon />, link: '/themes'},
+	{text: 'Categories', icon: <DashboardIcon />, link: '/categories'}
 ];
 export const mainListItems = (
 	<div>
 		{links.map((l,i) => {
-			return (<Link key={i} to={l.link}>
+			return (<Link key={i} to={l.link} style={{textDecoration: 'none'}}>
 				<ListItem button>
 					<ListItemIcon>
 						{l.icon}

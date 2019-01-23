@@ -6,6 +6,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {ImageLayoutHeader} from './ImageLayout';
 //import LayoutProperties from './LayoutsList/components/LayoutProperties';
 import styles from './../../../styles/styles';
+//import DnDVerticalList from '../../../components/core/DnDVerticalList';
+//import SortableList from '../../../components/core/SortableList';
 
 const layouts = [
 	{
@@ -55,12 +57,12 @@ class LayoutsList extends React.Component {
 	}
 
 	render() {
-		
+		const items = layouts.map((l,i) => this.renderLayout(l,i));
 		//const {classes} = this.props;
 		return (
 			<Grid container >
 				<Grid item xs={12} >
-					{layouts.map((l,i) => this.renderLayout(l,i))}
+					{items}
 				</Grid>
 			</Grid>
 		);

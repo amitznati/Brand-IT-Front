@@ -104,7 +104,7 @@ class EditTheme extends React.Component {
 	}
 
 	render() {
-		const {classes}  = this.props;
+		//const {classes}  = this.props;
 		const {name,tags} = this.state;
 		return (
 			<Grid container>
@@ -126,7 +126,7 @@ class EditTheme extends React.Component {
 					/>
 				</Grid>
 				<Grid item md={3} >
-					<Button variant="outlined" size="medium" color="primary">
+					<Button variant="outlined" size="large" color="primary">
 						Save
 					</Button>
 				</Grid>
