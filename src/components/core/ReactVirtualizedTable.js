@@ -159,27 +159,6 @@ MuiVirtualizedTable.defaultProps = {
 
 const WrappedVirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
-const data = [
-	['Frozen yoghurt', 159, 6.0, 24, 4.0],
-	['Ice cream sandwich', 237, 9.0, 37, 4.3],
-	['Eclair', 262, 16.0, 24, 6.0],
-	['Cupcake', 305, 3.7, 67, 4.3],
-	['Gingerbread', 356, 16.0, 49, 3.9],
-];
-
-let id = 0;
-function createData(dessert, calories, fat, carbs, protein) {
-	id += 1;
-	return { id, dessert, calories, fat, carbs, protein };
-}
-
-const rows = [];
-
-for (let i = 0; i < 200; i += 1) {
-	const randomSelection = data[Math.floor(Math.random() * data.length)];
-	rows.push(createData(...randomSelection));
-}
-
 function desc(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
 		return -1;
@@ -207,18 +186,17 @@ function getSorting(order, orderBy) {
 class ReactVirtualizedTable extends Component {
 	constructor(props){
 		super(props);
-		const sortBy = 'index';
+		const sortBy = props.sortBy;
 		const sortDirection = SortDirection.ASC;
-		const sortedList = rows;//this._sortList({sortBy, sortDirection});
+		const sortedList = stableSort(props.data, getSorting(sortDirection, sortBy));
 
 		this.state = {
 			sortBy,
 			sortDirection,
 			sortedList,
-			list: rows
+			list: props.data
 		};
 		this._sort = this._sort.bind(this);
-		//this._sortList = this._sortList.bind(this);
 	}
 
 
@@ -230,8 +208,10 @@ class ReactVirtualizedTable extends Component {
 	}
 	
 	
+	
 	render() {
 		const {sortedList, sortBy, sortDirection} = this.state;
+		const {columns} = this.props;
 		return (
 			<Paper style={{ height: 400, width: '100%' }}>
 				<WrappedVirtualizedTable
@@ -241,43 +221,18 @@ class ReactVirtualizedTable extends Component {
 					sort={this._sort}
 					sortBy={sortBy}
 					sortDirection={sortDirection}
-					columns={[
-						{
-							width: 200,
-							flexGrow: 1.0,
-							label: 'Dessert',
-							dataKey: 'dessert',
-						},
-						{
-							width: 120,
-							label: 'Calories (g)',
-							dataKey: 'calories',
-							numeric: true,
-						},
-						{
-							width: 120,
-							label: 'Fat (g)',
-							dataKey: 'fat',
-							numeric: true,
-						},
-						{
-							width: 120,
-							label: 'Carbs (g)',
-							dataKey: 'carbs',
-							numeric: true,
-						},
-						{
-							width: 120,
-							label: 'Protein (g)',
-							dataKey: 'protein',
-							numeric: true,
-						},
-					]}
+					columns={columns}
 				/>
 			</Paper>
 		);
 	}
 	
 }
+
+ReactVirtualizedTable.propTypes = {
+	columns: PropTypes.array.isRequired,
+	sortBy: PropTypes.string,
+	data: PropTypes.array.isRequired
+};
 
 export default ReactVirtualizedTable;
