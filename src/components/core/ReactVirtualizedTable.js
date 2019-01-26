@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
@@ -180,48 +180,104 @@ for (let i = 0; i < 200; i += 1) {
 	rows.push(createData(...randomSelection));
 }
 
-function ReactVirtualizedTable() {
-	return (
-		<Paper style={{ height: 400, width: '100%' }}>
-			<WrappedVirtualizedTable
-				rowCount={rows.length}
-				rowGetter={({ index }) => rows[index]}
-				onRowClick={event => console.log(event)}
-				columns={[
-					{
-						width: 200,
-						flexGrow: 1.0,
-						label: 'Dessert',
-						dataKey: 'dessert',
-					},
-					{
-						width: 120,
-						label: 'Calories (g)',
-						dataKey: 'calories',
-						numeric: true,
-					},
-					{
-						width: 120,
-						label: 'Fat (g)',
-						dataKey: 'fat',
-						numeric: true,
-					},
-					{
-						width: 120,
-						label: 'Carbs (g)',
-						dataKey: 'carbs',
-						numeric: true,
-					},
-					{
-						width: 120,
-						label: 'Protein (g)',
-						dataKey: 'protein',
-						numeric: true,
-					},
-				]}
-			/>
-		</Paper>
-	);
+function desc(a, b, orderBy) {
+	if (b[orderBy] < a[orderBy]) {
+		return -1;
+	}
+	if (b[orderBy] > a[orderBy]) {
+		return 1;
+	}
+	return 0;
+}
+
+function stableSort(array, cmp) {
+	const stabilizedThis = array.map((el, index) => [el, index]);
+	stabilizedThis.sort((a, b) => {
+		const order = cmp(a[0], b[0]);
+		if (order !== 0) return order;
+		return a[1] - b[1];
+	});
+	return stabilizedThis.map(el => el[0]);
+}
+
+function getSorting(order, orderBy) {
+	return order === 'DESC' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
+}
+
+class ReactVirtualizedTable extends Component {
+	constructor(props){
+		super(props);
+		const sortBy = 'index';
+		const sortDirection = SortDirection.ASC;
+		const sortedList = rows;//this._sortList({sortBy, sortDirection});
+
+		this.state = {
+			sortBy,
+			sortDirection,
+			sortedList,
+			list: rows
+		};
+		this._sort = this._sort.bind(this);
+		//this._sortList = this._sortList.bind(this);
+	}
+
+
+	_sort({sortBy, sortDirection}) {
+		const {list} = this.state;
+		//const sortedList = this._sortList({sortBy, sortDirection});
+		const sortedList = stableSort(list, getSorting(sortDirection, sortBy));
+		this.setState({sortBy, sortDirection, sortedList});
+	}
+	
+	
+	render() {
+		const {sortedList, sortBy, sortDirection} = this.state;
+		return (
+			<Paper style={{ height: 400, width: '100%' }}>
+				<WrappedVirtualizedTable
+					rowCount={sortedList.length}
+					rowGetter={({ index }) => sortedList[index]}
+					onRowClick={event => console.log(event)}
+					sort={this._sort}
+					sortBy={sortBy}
+					sortDirection={sortDirection}
+					columns={[
+						{
+							width: 200,
+							flexGrow: 1.0,
+							label: 'Dessert',
+							dataKey: 'dessert',
+						},
+						{
+							width: 120,
+							label: 'Calories (g)',
+							dataKey: 'calories',
+							numeric: true,
+						},
+						{
+							width: 120,
+							label: 'Fat (g)',
+							dataKey: 'fat',
+							numeric: true,
+						},
+						{
+							width: 120,
+							label: 'Carbs (g)',
+							dataKey: 'carbs',
+							numeric: true,
+						},
+						{
+							width: 120,
+							label: 'Protein (g)',
+							dataKey: 'protein',
+							numeric: true,
+						},
+					]}
+				/>
+			</Paper>
+		);
+	}
+	
 }
 
 export default ReactVirtualizedTable;

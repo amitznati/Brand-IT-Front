@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { Button, Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import {Grid, Button} from '@material-ui/core';
-import CoreVirtualizedTable from './../../components/core/CoreVirtualizedTable';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ReactVirtualizedTable from '../../components/core/ReactVirtualizedTable';
 const styles = theme => ({
 	button: {
 		float: 'right'
@@ -23,7 +23,7 @@ class Categories extends React.Component {
 					</Button>
 				</Grid>
 				<Grid item xs={12} className={classes.padding}>
-					<CoreVirtualizedTable />
+					<ReactVirtualizedTable />
 				</Grid>
 			</Grid>
 		);
