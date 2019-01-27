@@ -140,7 +140,7 @@ const toolbarStyles = theme => ({
 	},
 });
 
-let EnhancedTableToolbar = props => {
+export let EnhancedTableToolbar = props => {
 	const { numSelected, classes } = props;
 
 	return (
@@ -186,6 +186,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
+
 
 const styles = theme => ({
 	root: {

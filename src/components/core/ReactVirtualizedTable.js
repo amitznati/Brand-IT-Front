@@ -3,12 +3,87 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import {withStyles, Paper, TableCell, TableSortLabel, IconButton} from '@material-ui/core';
+import {withStyles, Paper, TableCell, TableSortLabel, IconButton, Toolbar, Typography, Tooltip} from '@material-ui/core';
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
 //import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import {Link} from 'react-router-dom';
+import { lighten } from '@material-ui/core/styles/colorManipulator';
+import DeleteIcon from '@material-ui/icons/Delete';
+import FilterListIcon from '@material-ui/icons/FilterList';
 
+const toolbarStyles = theme => ({
+	root: {
+		paddingRight: theme.spacing.unit,
+	},
+	highlight:
+		theme.palette.type === 'light'
+			? {
+				color: theme.palette.secondary.main,
+				backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+			}
+			: {
+				color: theme.palette.text.primary,
+				backgroundColor: theme.palette.secondary.dark,
+			},
+	spacer: {
+		flex: '1 1 100%',
+	},
+	actions: {
+		color: theme.palette.text.secondary,
+	},
+	title: {
+		flex: '0 0 auto',
+	},
+});
+
+export let EnhancedTableToolbar = props => {
+	const { numSelected = 0, classes, title } = props;
+
+	return (
+		<Toolbar
+			className={classNames(classes.root, {
+				[classes.highlight]: numSelected > 0,
+			})}
+		>
+			<div className={classes.title}>
+				{numSelected > 0 ? (
+					<Typography color="inherit" variant="subtitle1">
+						{numSelected} selected
+					</Typography>
+				) : (
+					<Typography variant="h6" id="tableTitle">
+						{title}
+					</Typography>
+				)}
+			</div>
+			<div className={classes.spacer} />
+			<div className={classes.actions}>
+				{numSelected > 0 ? (
+					<Tooltip title="Delete">
+						<IconButton aria-label="Delete">
+							<DeleteIcon />
+						</IconButton>
+					</Tooltip>
+				) : (
+					<Tooltip title="Filter list">
+						<IconButton aria-label="Filter list">
+							<FilterListIcon />
+						</IconButton>
+					</Tooltip>
+				)}
+			</div>
+		</Toolbar>
+	);
+};
+
+EnhancedTableToolbar.propTypes = {
+	classes: PropTypes.object.isRequired,
+	numSelected: PropTypes.number,
+	title: PropTypes.string
+};
+
+EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 const styles = theme => ({
 	table: {
 		fontFamily: theme.typography.fontFamily,
@@ -224,7 +299,7 @@ class ReactVirtualizedTable extends Component {
 			sortBy,
 			sortDirection,
 			sortedList,
-			list: props.data
+			list: props.data,
 		};
 		this._sort = this._sort.bind(this);
 	}
@@ -250,23 +325,27 @@ class ReactVirtualizedTable extends Component {
 	
 	render() {
 		const {sortedList, sortBy, sortDirection} = this.state;
-		const {columns,withActions, editPath} = this.props;
+		const {columns,withActions, editPath, title} = this.props;
 		let newColumns = columns;
 		if(withActions === true) {
 			newColumns.push(this.actionsColumns());
 		}
 		return (
-			<Paper style={{ height: 400, width: '100%' }}>
-				<WrappedVirtualizedTable
-					rowCount={sortedList.length}
-					rowGetter={({ index }) => sortedList[index]}
-					onRowClick={event => console.log(event)}
-					sort={this._sort}
-					sortBy={sortBy}
-					sortDirection={sortDirection}
-					columns={newColumns}
-					editPath={editPath}
-				/>
+			<Paper style={{  width: '100%' }}>
+				{title && <EnhancedTableToolbar title={title}/>}
+				<div style={{ height: 400, width: '100%' }}>
+					<WrappedVirtualizedTable
+						rowCount={sortedList.length}
+						rowGetter={({ index }) => sortedList[index]}
+						onRowClick={event => console.log(event)}
+						sort={this._sort}
+						sortBy={sortBy}
+						sortDirection={sortDirection}
+						columns={newColumns}
+						editPath={editPath}
+					/>
+				</div>
+				
 			</Paper>
 		);
 	}
@@ -278,7 +357,8 @@ ReactVirtualizedTable.propTypes = {
 	sortBy: PropTypes.string,
 	data: PropTypes.array.isRequired,
 	withActions: PropTypes.bool,
-	editPath: PropTypes.string
+	editPath: PropTypes.string,
+	title: PropTypes.string,
 };
 
 export default ReactVirtualizedTable;

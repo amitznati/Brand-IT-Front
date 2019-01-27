@@ -38,16 +38,20 @@ class Categories extends React.Component {
 	render() {
 		const {classes} = this.props;
 		return (
-			<Grid container>
+			<Grid container
+				direction="row"
+				justify="space-between"
+				alignItems="flex-end"
+			>
 				<Grid item xs={12} className={classes.padding}>
-					<Button variant="outlined" size="large" color="primary" className={classes.button}>
+					<Button variant="outlined" color="primary" className={classes.button}>
 					Add Category
 					</Button>
 				</Grid>
 				<Grid item xs={12} className={classes.padding}>
 					<ReactVirtualizedTable 
 						data={rows}
-						//sortBy='dessert'
+						title='Categories'
 						withActions={true}
 						editPath='/edit-category'
 						columns={[
