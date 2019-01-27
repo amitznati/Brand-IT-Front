@@ -3,11 +3,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Paper from '@material-ui/core/Paper';
+import {withStyles, Paper, TableCell, TableSortLabel, IconButton} from '@material-ui/core';
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
+//import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import {Link} from 'react-router-dom';
 
 const styles = theme => ({
 	table: {
@@ -31,6 +31,9 @@ const styles = theme => ({
 	},
 	noClick: {
 		cursor: 'initial',
+	},
+	margin: {
+		margin: theme.spacing.unit,
 	},
 });
 
@@ -59,6 +62,29 @@ class MuiVirtualizedTable extends React.PureComponent {
 			</TableCell>
 		);
 	};
+
+	renderActionCell = ({ cellData, columnIndex = null }) => {
+		const { columns, classes, rowHeight, onRowClick, editPath } = this.props;
+		return (
+			<TableCell
+				component="div"
+				className={classNames(classes.tableCell, classes.flexContainer, {
+					[classes.noClick]: onRowClick == null,
+				})}
+				variant="body"
+				style={{ height: rowHeight }}
+				align={(columnIndex != null && columns[columnIndex].numeric) || false ? 'right' : 'left'}
+			>
+				<div>
+					<Link style={{textDecoration: 'none'}} to={{pathname: editPath, search: '?id=' + cellData}}>
+						<IconButton aria-label="Edit" className={classes.margin}>
+							<EditIcon fontSize="small" />
+						</IconButton>
+					</Link>
+				</div>
+			</TableCell>
+		);
+	}
 
 	headerRenderer = ({ label, columnIndex, dataKey, sortBy, sortDirection }) => {
 		const { headerHeight, columns, classes, sort } = this.props;
@@ -101,9 +127,12 @@ class MuiVirtualizedTable extends React.PureComponent {
 						{...tableProps}
 						rowClassName={this.getRowClassName}
 					>
-						{columns.map(({ cellContentRenderer = null, className, dataKey, ...other }, index) => {
+						{columns.map(({isActions = false, cellContentRenderer = null, className, dataKey, ...other }, index) => {
 							let renderer;
-							if (cellContentRenderer != null) {
+							if (isActions === true) {
+								renderer = this.renderActionCell;
+							}
+							else if (cellContentRenderer != null) {
 								renderer = cellRendererProps =>
 									this.cellRenderer({
 										cellData: cellContentRenderer(cellRendererProps),
@@ -150,6 +179,7 @@ MuiVirtualizedTable.propTypes = {
 	rowClassName: PropTypes.string,
 	rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
 	sort: PropTypes.func,
+	editPath: PropTypes.string
 };
 
 MuiVirtualizedTable.defaultProps = {
@@ -207,11 +237,24 @@ class ReactVirtualizedTable extends Component {
 		this.setState({sortBy, sortDirection, sortedList});
 	}
 	
+	actionsColumns() {
+		return {
+			width: 200,
+			label: 'Actions',
+			disableSort: true,
+			dataKey: 'id',
+			isActions: true
+		};
+	}
 	
 	
 	render() {
 		const {sortedList, sortBy, sortDirection} = this.state;
-		const {columns} = this.props;
+		const {columns,withActions, editPath} = this.props;
+		let newColumns = columns;
+		if(withActions === true) {
+			newColumns.push(this.actionsColumns());
+		}
 		return (
 			<Paper style={{ height: 400, width: '100%' }}>
 				<WrappedVirtualizedTable
@@ -221,7 +264,8 @@ class ReactVirtualizedTable extends Component {
 					sort={this._sort}
 					sortBy={sortBy}
 					sortDirection={sortDirection}
-					columns={columns}
+					columns={newColumns}
+					editPath={editPath}
 				/>
 			</Paper>
 		);
@@ -232,7 +276,9 @@ class ReactVirtualizedTable extends Component {
 ReactVirtualizedTable.propTypes = {
 	columns: PropTypes.array.isRequired,
 	sortBy: PropTypes.string,
-	data: PropTypes.array.isRequired
+	data: PropTypes.array.isRequired,
+	withActions: PropTypes.bool,
+	editPath: PropTypes.string
 };
 
 export default ReactVirtualizedTable;
