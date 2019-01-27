@@ -1,8 +1,11 @@
-import { Button, Grid } from '@material-ui/core';
+//import { Button, Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactVirtualizedTable from '../../components/core/ReactVirtualizedTable';
+//import ThemeCard from '../themes/components/ThemeCard';
+//import CategoryCard from './components/CategoryCard';
+import CoreDataView from '../../components/core/CoreDataView';
+//import ReactVirtualizedTable from '../../components/core/ReactVirtualizedTable';
 const styles = theme => ({
 	button: {
 		float: 'right'
@@ -22,7 +25,7 @@ const data = [
 let id = 0;
 function createData(name) {
 	id += 1;
-	return { id, name };
+	return { id, name, image: 'https://material-ui.com/static/images/cards/contemplative-reptile.jpg' };
 }
 
 const rows = [];
@@ -36,35 +39,23 @@ for (let i = 0; i < 200; i += 1) {
 class Categories extends React.Component {
 
 	render() {
-		const {classes} = this.props;
+		//const {classes} = this.props;
 		return (
-			<Grid container
-				direction="row"
-				justify="space-between"
-				alignItems="flex-end"
-			>
-				<Grid item xs={12} className={classes.padding}>
-					<Button variant="outlined" color="primary" className={classes.button}>
-					Add Category
-					</Button>
-				</Grid>
-				<Grid item xs={12} className={classes.padding}>
-					<ReactVirtualizedTable 
-						data={rows}
-						title='Categories'
-						withActions={true}
-						editPath='/edit-category'
-						columns={[
-							{
-								width: 200,
-								flexGrow: 1.0,
-								label: 'Name',
-								dataKey: 'name',
-							},
-						]}
-					/>
-				</Grid>
-			</Grid>
+			<CoreDataView 
+				data={rows} 
+				title='Categories'
+				cardTitleObjName='name'
+				cardImageObjName='image'
+				editPath='/edit-category'
+				columns={[
+					{
+						width: 200,
+						flexGrow: 1.0,
+						label: 'Name',
+						dataKey: 'name',
+					},
+				]}
+			/>
 		);
 	}
 }

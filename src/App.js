@@ -12,6 +12,7 @@ import Home from './containers/Home';
 import Layout from './components/layout';
 import Categories from './containers/categories/categories';
 import EditCategory from './containers/categories/components/EditCategory';
+import EditKit from './containers/categories/components/EditKit';
 
 if(localStorage.jwtToken) {
 	setAuthToken(localStorage.jwtToken);
@@ -39,6 +40,8 @@ class App extends Component {
 						<Route exact path="/categories" component={ Categories } />
 						<Route exact path="/edit-category" component={ EditCategory } />
 						<Route exact path="/edit-category:id" component={ EditCategory } />
+						<Route exact path="/edit-kit" component={ EditKit } />
+						<Route exact path="/edit-kit:id" component={ EditKit } />
 					</Layout>
 				</Router>
 			</Provider>

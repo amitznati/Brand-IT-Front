@@ -19,7 +19,7 @@ class Themes extends React.Component {
 		return (
 			<Grid container>
 				<Grid item xs={12} className={classes.padding}>
-					<Button variant="outlined" size="large" color="primary" className={classes.button}>
+					<Button variant="outlined"  color="primary" className={classes.button}>
 					Add Theme
 					</Button>
 				</Grid>
