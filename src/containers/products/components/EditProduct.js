@@ -4,16 +4,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 //import ReactVirtualizedTable from '../../../components/core/ReactVirtualizedTable';
 import {CoreText} from './../../../components/core';
-import Kits from '../../kits/Kits';
 const styles = theme => ({
 	button: {
 		float: 'right'
 	},
 	padding: {
 		padding: theme.spacing.unit
-	},
-	margin: {
-		margin: theme.spacing.unit
 	}
 });
 const data = [
@@ -27,18 +23,18 @@ const data = [
 let id = 0;
 function createData(name) {
 	id += 1;
-	return { id, name };
+	return { id, name, image: 'https://material-ui.com/static/images/cards/contemplative-reptile.jpg' };
 }
 
 const rows = [];
 
-for (let i = 0; i < 200; i += 1) {
+for (let i = 0; i < 50; i += 1) {
 	const randomSelection = data[Math.floor(Math.random() * data.length)];
 	rows.push(createData(...randomSelection));
 }
 
 
-class EditCategory extends React.Component {
+class EditKit extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
@@ -76,14 +72,14 @@ class EditCategory extends React.Component {
 					</Grid>
 				</Grid>
 				<Grid container>
-					<Kits />
+					
 				</Grid>
 			</div>
 		);
 	}
 }
-EditCategory.propTypes = {
+EditKit.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(EditCategory);
+export default withStyles(styles)(EditKit);

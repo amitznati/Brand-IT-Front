@@ -104,35 +104,45 @@ class EditTheme extends React.Component {
 	}
 
 	render() {
-		//const {classes}  = this.props;
+		const {classes}  = this.props;
 		const {name,tags} = this.state;
 		return (
-			<Grid container>
-				<Grid item md={3}>
-					<CoreText 
-						label="Name" 
-						value={name}
-						handleTextChange={this.handleNameChange.bind(this)}
-					/>
+			<div>
+				<Grid container
+					direction="row"
+					justify="space-between"
+					alignItems="flex-end"
+					spacing={16}
+					className={classes.padding}
+				>
+					<Grid item md={3}>
+						<CoreText 
+							label="Name" 
+							value={name}
+							handleTextChange={this.handleNameChange.bind(this)}
+						/>
+					</Grid>
+					<Grid item md={6}>
+						<CoreAutocomplete 	
+							options={availableTags}
+							isMulti={true}
+							label="Tags"
+							placeholder="Add / Remove Tags"
+							multi={tags}
+							handleChangeMulti={this.handleTagsChange.bind(this)}
+						/>
+					</Grid>
+					<Grid item md={3} >
+						<Button variant="outlined" color="primary" style={{float: 'right'}}>
+							Save
+						</Button>
+					</Grid>
 				</Grid>
-				<Grid item md={6}>
-					<CoreAutocomplete 	
-						options={availableTags}
-						isMulti={true}
-						label="Tags"
-						placeholder="Add / Remove Tags"
-						multi={tags}
-						handleChangeMulti={this.handleTagsChange.bind(this)}
-					/>
+				<Grid container>
+					{availableThemeImages.map(image => this.renderThemeImage(image))}
 				</Grid>
-				<Grid item md={3} >
-					<Button variant="outlined" size="large" color="primary">
-						Save
-					</Button>
-				</Grid>
-				{availableThemeImages.map(image => this.renderThemeImage(image))}
-
-			</Grid>
+			</div>
+			
 		);
 	}
 	

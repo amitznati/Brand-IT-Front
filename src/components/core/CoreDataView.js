@@ -5,9 +5,8 @@ import {Tabs,Tab,Typography, Grid,Button, Paper}	from '@material-ui/core';
 import GridIcon from '@material-ui/icons/GridOn';
 import ListIcon from '@material-ui/icons/List';
 import ReactVirtualizedTable, { EnhancedTableToolbar } from './ReactVirtualizedTable';
-//import CategoryCard from '../../containers/categories/components/CategoryCard';
+import {Link} from 'react-router-dom';
 import CoreCard from './CoreCard';
-//import CoreVirtualizedGrid from './CoreVirtualizedGrid';
 
 function TabContainer(props) {
 	return (
@@ -48,7 +47,7 @@ class CoreDataView extends React.Component {
 	};
 
 	render() {
-		const { classes, data, title, cardTitleObjName, cardImageObjName, editPath, columns } = this.props;
+		const { classes, data, title, single, cardTitleObjName, cardImageObjName, editPath, columns } = this.props;
 		const { value } = this.state;
 
 		return (
@@ -59,9 +58,11 @@ class CoreDataView extends React.Component {
 					alignItems="flex-end"
 				>
 					<Grid item xs={12} className={classes.padding}>
-						<Button variant="outlined" color="primary" className={classes.button}>
-						Add {title}
-						</Button>
+						<Link to={editPath}>
+							<Button variant="outlined" color="primary" className={classes.button}>
+							Add {single}
+							</Button>
+						</Link>
 					</Grid>
 					<Grid item xs={12}>
 						{title && <EnhancedTableToolbar title={title}/>}
@@ -117,6 +118,7 @@ CoreDataView.propTypes = {
 	classes: PropTypes.object.isRequired,
 	data: PropTypes.array.isRequired,
 	title: PropTypes.string,
+	single: PropTypes.string,
 	cardTitleObjName: PropTypes.string,
 	editPath: PropTypes.string,
 	columns: PropTypes.array,

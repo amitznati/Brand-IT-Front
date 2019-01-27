@@ -132,7 +132,7 @@ class Autocomplete extends React.Component {
 			}),
 		};
 		return (
-			<FormControl fullWidth className={classes.selectControl}>
+			<FormControl fullWidth >
 				<div className={classes.root}>
 					<NoSsr>
 						{!isMulti && <Select

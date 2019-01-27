@@ -12,7 +12,10 @@ import Home from './containers/Home';
 import Layout from './components/layout';
 import Categories from './containers/categories/categories';
 import EditCategory from './containers/categories/components/EditCategory';
-import EditKit from './containers/categories/components/EditKit';
+import EditKit from './containers/kits/components/EditKit';
+import Kits from './containers/kits/Kits';
+import EditProduct from './containers/products/components/EditProduct';
+import Products from './containers/products/Products';
 
 if(localStorage.jwtToken) {
 	setAuthToken(localStorage.jwtToken);
@@ -34,14 +37,22 @@ class App extends Component {
 					<Layout>
 						<Route exact path="/" component={ Home } />
 						<Route exact path="/edit-template" component={ EditTemplate } />
+
 						<Route exact path="/themes" component={ Themes } />
 						<Route exact path="/edit-theme/:id" component={ EditTheme } />
 						<Route exact path="/edit-theme" component={ EditTheme } />
+
 						<Route exact path="/categories" component={ Categories } />
 						<Route exact path="/edit-category" component={ EditCategory } />
 						<Route exact path="/edit-category:id" component={ EditCategory } />
+
+						<Route exact path="/kits" component={ Kits } />
 						<Route exact path="/edit-kit" component={ EditKit } />
 						<Route exact path="/edit-kit:id" component={ EditKit } />
+						
+						<Route exact path="/products" component={ Products } />
+						<Route exact path="/edit-product" component={ EditProduct } />
+						<Route exact path="/edit-product:id" component={ EditProduct } />
 					</Layout>
 				</Router>
 			</Provider>

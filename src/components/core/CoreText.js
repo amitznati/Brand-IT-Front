@@ -5,9 +5,9 @@ import { withStyles } from '@material-ui/core/styles';
 import styles from './../../styles/styles';
 
 const CoreText = props => {
-	const {classes, value, handleTextChange, label} = props;
+	const {/*classes,*/ value, handleTextChange, label} = props;
 	return (
-		<FormControl fullWidth className={classes.formControl}>
+		<FormControl fullWidth >
 			<TextField
 				label={label}
 				value={value}

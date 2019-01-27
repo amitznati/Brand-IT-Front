@@ -36,18 +36,18 @@ for (let i = 0; i < 20; i += 1) {
 }
 
 
-class Categories extends React.Component {
+class Kits extends React.Component {
 
 	render() {
 		//const {classes} = this.props;
 		return (
 			<CoreDataView 
 				data={rows} 
-				title='Categories'
-				single='Category'
+				title='Kits'
+				single='Kit'
 				cardTitleObjName='name'
 				cardImageObjName='image'
-				editPath='/edit-category'
+				editPath='/edit-kit'
 				columns={[
 					{
 						width: 200,
@@ -60,8 +60,8 @@ class Categories extends React.Component {
 		);
 	}
 }
-Categories.propTypes = {
+Kits.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Categories);
+export default withStyles(styles)(Kits);

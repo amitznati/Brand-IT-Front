@@ -10,7 +10,9 @@ import {Link} from 'react-router-dom';
 const links = [
 	{text: 'Edit Template', icon: <DashboardIcon />, link: '/edit-template'},
 	{text: 'Themes', icon: <DashboardIcon />, link: '/themes'},
-	{text: 'Categories', icon: <DashboardIcon />, link: '/categories'}
+	{text: 'Categories', icon: <DashboardIcon />, link: '/categories'},
+	{text: 'Kits', icon: <DashboardIcon />, link: '/kits'},
+	{text: 'Products', icon: <DashboardIcon />, link: '/products'}
 ];
 export const mainListItems = (
 	<div>
