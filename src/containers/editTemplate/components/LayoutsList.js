@@ -1,68 +1,54 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {Grid, ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails} from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {ImageLayoutHeader} from './ImageLayout';
-//import LayoutProperties from './LayoutsList/components/LayoutProperties';
+import {Grid,Paper} from '@material-ui/core';
+import {ImageLayoutHeader, TextLayoutHeader} from './layoutsHeaders';
 import styles from './../../../styles/styles';
-//import DnDVerticalList from '../../../components/core/DnDVerticalList';
-//import SortableList from '../../../components/core/SortableList';
+import CoreSortableList from '../../../components/core/CoreSortableList';
 
-const layouts = [
-	{
-		type: 'image',
-		properties: {
-			src: 'https://material-ui.com/static/images/avatar/1.jpg',
-		}
-	},
-	{
-		type: 'text',
-		properties: {
-			text: 'sdf sdf',
-		}
-	},
-];
+import {sortableHandle} from 'react-sortable-hoc';
+import ReorderIcon from '@material-ui/icons/Reorder';
+const DragHandle = sortableHandle(() => <ReorderIcon style={{cursor: 'move'}}/>);
+
 class LayoutsList extends React.Component {
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			expanded: null,
-		};
-
+	getLayoutHeader(l,i){
+		switch(l.type) {
+		case 'image':
+			return <ImageLayoutHeader key={i} layout={l}/>;
+		case 'text':
+			return <TextLayoutHeader key={i} layout={l}/>;
+		default:
+			return '';
+		}
 	}
-	
-	
-	handleChange = panel => (event, expanded) => {
-		this.setState({
-			expanded: expanded ? panel : false,
-		});
-	};
-
 	renderLayout(l,i) {
-		const {expanded} = this.state;
-		const {classes} = this.props;
 		return (
-			<ExpansionPanel key={i} expanded={expanded === i} onChange={this.handleChange(i).bind(this)}>
-				<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-					<ImageLayoutHeader classes={classes} layout={l}/>
-				</ExpansionPanelSummary>
-				<ExpansionPanelDetails >
-					<Typography className={classes.heading}>Layout Properties</Typography>
-				</ExpansionPanelDetails>
-			</ExpansionPanel>
+			<Paper square>
+				<Grid container alignItems="center">
+					<Grid item><DragHandle/></Grid>
+					<Grid item>
+						{this.getLayoutHeader(l,i)}
+					</Grid>
+				</Grid>
+			</Paper>
+			
 		);
 		
 	}
 
 	render() {
+		const {layouts, onSortEnd, onLayoutClick} = this.props;
 		const items = layouts.map((l,i) => this.renderLayout(l,i));
-		//const {classes} = this.props;
 		return (
 			<Grid container >
 				<Grid item xs={12} >
-					{items}
+					<CoreSortableList
+						items={items}
+						useDragHandle={true}
+						onItemClick={onLayoutClick}
+						onSortEnd={onSortEnd}
+					/>
 				</Grid>
 			</Grid>
 		);
@@ -70,6 +56,9 @@ class LayoutsList extends React.Component {
 }
 LayoutsList.propTypes = {
 	classes: PropTypes.object.isRequired,
+	layouts: PropTypes.array.isRequired,
+	onSortEnd: PropTypes.func,
+	onLayoutClick: PropTypes.func
 };
 
 export default withStyles(styles)(LayoutsList);
