@@ -3,13 +3,24 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {Grid,Paper} from '@material-ui/core';
 import {ImageLayoutHeader, TextLayoutHeader} from './layoutsHeaders';
-import styles from './../../../styles/styles';
 import CoreSortableList from '../../../components/core/CoreSortableList';
 
 import {sortableHandle} from 'react-sortable-hoc';
 import ReorderIcon from '@material-ui/icons/Reorder';
 const DragHandle = sortableHandle(() => <ReorderIcon style={{cursor: 'move'}}/>);
 
+const styles = theme => ({
+
+	layoutPaper: {
+		margin: theme.spacing.unit,
+		marginLeft: 0,
+		padding: theme.spacing.unit,
+
+	},
+	layoutGrid: {
+		height: '50px'
+	}
+}); 
 class LayoutsList extends React.Component {
 
 	getLayoutHeader(l,i){
@@ -23,11 +34,12 @@ class LayoutsList extends React.Component {
 		}
 	}
 	renderLayout(l,i) {
+		const {classes} = this.props;
 		return (
-			<Paper square>
-				<Grid container alignItems="center">
-					<Grid item><DragHandle/></Grid>
-					<Grid item>
+			<Paper square className={classes.layoutPaper}>
+				<Grid container alignItems="center" className={classes.layoutGrid}>
+					<Grid item xs={2}><DragHandle/></Grid>
+					<Grid item xs={10}>
 						{this.getLayoutHeader(l,i)}
 					</Grid>
 				</Grid>

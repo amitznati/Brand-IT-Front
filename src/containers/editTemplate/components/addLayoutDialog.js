@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 //import { withStyles } from '@material-ui/core/styles';
-import {Dialog, DialogTitle, DialogActions,DialogContent, Button, Typography} from '@material-ui/core';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import StarIcon from '@material-ui/icons/Star';
+import CloseIcon from '@material-ui/icons/Close';
+import {Dialog, DialogTitle, DialogActions,DialogContent, Button, Toolbar, AppBar, Tabs, Tab, Typography, IconButton} from '@material-ui/core';
+import ThemeImagesList from '../../themes/components/ThemeImagesList';
 function TabContainer(props) {
 	return (
-		<Typography component="div" style={{ padding: 8 * 3 }}>
+		<Typography component="div" >
 			{props.children}
 		</Typography>
 	);
@@ -18,44 +15,55 @@ function TabContainer(props) {
 TabContainer.propTypes = {
 	children: PropTypes.node.isRequired,
 };
-
+const types = [
+	'image','text','shape'
+];
 class AddLayoutDialog extends React.Component {
 	state = {
 		value: 0,
 	};
 	handleClose = () => {
-		this.props.onClose(this.props.selectedValue);
+		this.props.onClose();
 	};
 	
-	handleListItemClick = value => {
-		this.props.onClose(value);
+	handleChange = (event, value) => {
+		this.setState({ value });
 	};
+
+	onImageSelect(url) {
+		this.props.onClose(types[this.state.value],{url});
+	}
 
 	render() {
 		const {open, /* classes, onClose, selectedValue,*/ ...other, } = this.props;
+		const {value} = this.state;
 		return (
 			<Dialog 
 				onClose={this.handleClose}
-				//fullWidth={true}
-				//maxWidth="lg"
+				fullScreen
 				open={open}
 				aria-labelledby="simple-dialog-title" {...other}>
-				<DialogTitle id="simple-dialog-title">Add layout</DialogTitle>
+				<DialogTitle id="simple-dialog-title">
+					<AppBar position="static">
+						<Toolbar>
+							<IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+								<CloseIcon />
+							</IconButton>
+							<Typography variant="h6" color="inherit" >
+								Add Layout
+							</Typography>
+						</Toolbar>
+						<Tabs value={value} onChange={this.handleChange.bind(this)}>
+							<Tab label="Image"/>
+							<Tab label="Text" />
+							<Tab label="Shape" />
+						</Tabs>
+					</AppBar>
+				</DialogTitle>
 				<DialogContent>
-					<List component="nav">
-						<ListItem button onClick={() => this.handleListItemClick('image')}>
-							<ListItemIcon>
-								<StarIcon />
-							</ListItemIcon>
-							<ListItemText inset primary="Image" />
-						</ListItem>
-						<ListItem button onClick={() => this.handleListItemClick('text')}>
-							<ListItemText inset primary="Text" />
-						</ListItem>
-						<ListItem button onClick={() => this.handleListItemClick('shape')}>
-							<ListItemText inset primary="Shape" />
-						</ListItem>
-					</List>
+					{value === 0 && <TabContainer><ThemeImagesList isForSelect onSelect={this.onImageSelect.bind(this)}/></TabContainer>}
+					{value === 1 && <TabContainer>Text</TabContainer>}
+					{value === 2 && <TabContainer>Shape</TabContainer>}
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={this.handleClose} color="primary">

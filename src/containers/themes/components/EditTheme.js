@@ -1,20 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {Grid, Button, Card, CardHeader, CardContent} from '@material-ui/core';
+import {Grid, Button} from '@material-ui/core';
 import { CoreText, CoreAutocomplete } from '../../../components/core';
-import {CardActions, Typography} from '@material-ui/core';
+import ThemeImagesList from './ThemeImagesList';
 
-import bl from './../../../assets/lizard/babkground-landscape.jpg';
-import bp from './../../../assets/lizard/babkground-portraite.jpg';
-import br from './../../../assets/lizard/bottom-right.jpg';
-import header from './../../../assets/lizard/header.jpg';
-const themeImages= {
-	'babkground-landscape': bl,
-	'babkground-portraite': bp,
-	'bottom-right': br,
-	'header': header
-};
 const styles = theme => ({
 	padding: {
 		padding: theme.spacing.unit
@@ -29,16 +19,6 @@ const styles = theme => ({
 		padding: 0
 	}
 });
-const availableThemeImages = [
-	{title: 'Babkground Landscape', fileName: 'babkground-landscape'},
-	{title: 'Background Portraite', fileName: 'babkground-portraite'},
-	{title: 'Header', fileName: 'header'},
-	{title: 'Top Left', fileName: 'top-left'},
-	{title: 'Top Right', fileName: 'top-right'},
-	{title: 'Footer', fileName: 'footer'},
-	{title: 'Bottom Left', fileName: 'bottom-left'},
-	{title: 'Bottom Right', fileName: 'bottom-right'}
-];
 
 const availableTags = ['clasic','modern'].map(t => ({
 	value: t,
@@ -76,32 +56,7 @@ class EditTheme extends React.Component {
 		this.setState({ tags: newTags });
 	};
 
-	renderThemeImage(image) {
-		const {classes} = this.props;
-		const themeImage = themeImages[image.fileName];
-		return (
-			<Grid className={classes.padding} key={image.fileName} item md={12}>
-				<Card>
-					<CardHeader className={classes.padding}
-						title={<Typography gutterBottom variant="h5" component="h2">
-							{image.title}
-						</Typography>}
-					/>
-					<CardContent className={classes.noPadding}>
-						{themeImage && <img src={themeImage} alt={image.title} />}
-					</CardContent>
-					<CardActions>
-						<Button size="small" color="primary">
-							{themeImage ? 'Replace' : 'Add'}
-						</Button>
-						{themeImage &&<Button size="small" color="primary">
-							Remove
-						</Button>}
-					</CardActions>
-				</Card>
-			</Grid>
-		);
-	}
+	
 
 	render() {
 		const {classes}  = this.props;
@@ -138,9 +93,7 @@ class EditTheme extends React.Component {
 						</Button>
 					</Grid>
 				</Grid>
-				<Grid container>
-					{availableThemeImages.map(image => this.renderThemeImage(image))}
-				</Grid>
+				<ThemeImagesList/>
 			</div>
 			
 		);
