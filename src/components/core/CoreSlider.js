@@ -17,6 +17,7 @@ const CoreSlider = props => {
 						className={classes.slider}
 						onChange={(e,v) => handleSliderChange(v)}
 						max={30}
+						step="0.01"
 					/>
 				</Grid>
 				{withNumberInput && <Grid item xs={3}>
@@ -24,6 +25,7 @@ const CoreSlider = props => {
 						type="number"
 						value={value}
 						max={30}
+						step="0.01"
 						onChange={e=>handleSliderChange(e.target.value)}
 					/>
 				</Grid>}

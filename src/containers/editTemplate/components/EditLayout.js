@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Fab, Paper, TextField, Grid} from '@material-ui/core';
+import {Fab, Paper, Grid} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
 import CoreSlider from '../../../components/core/CoreSlider';

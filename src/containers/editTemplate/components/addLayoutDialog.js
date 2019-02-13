@@ -16,7 +16,7 @@ TabContainer.propTypes = {
 	children: PropTypes.node.isRequired,
 };
 const types = [
-	'image','text','shape'
+	'logo','image','text','shape'
 ];
 class AddLayoutDialog extends React.Component {
 	state = {
@@ -54,6 +54,7 @@ class AddLayoutDialog extends React.Component {
 							</Typography>
 						</Toolbar>
 						<Tabs value={value} onChange={this.handleChange.bind(this)}>
+							<Tab label="Logo" />
 							<Tab label="Image"/>
 							<Tab label="Text" />
 							<Tab label="Shape" />
@@ -61,9 +62,10 @@ class AddLayoutDialog extends React.Component {
 					</AppBar>
 				</DialogTitle>
 				<DialogContent>
-					{value === 0 && <TabContainer><ThemeImagesList isForSelect onSelect={this.onImageSelect.bind(this)}/></TabContainer>}
-					{value === 1 && <TabContainer>Text</TabContainer>}
-					{value === 2 && <TabContainer>Shape</TabContainer>}
+					{value === 0 && <TabContainer>Logo</TabContainer>}
+					{value === 1 && <TabContainer><ThemeImagesList isForSelect onSelect={this.onImageSelect.bind(this)}/></TabContainer>}
+					{value === 2 && <TabContainer>Text</TabContainer>}
+					{value === 3 && <TabContainer>Shape</TabContainer>}
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={this.handleClose} color="primary">
