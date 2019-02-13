@@ -41,7 +41,6 @@ const style = theme => ({
 	sliderContainer: {
 		bottom: 0,
 		position: 'absolute',
-		paddingRight:  theme.spacing.unit * 2
 	},
 	label: {
 		marginLeft: theme.spacing.unit,

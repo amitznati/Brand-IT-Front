@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {Grid, Button} from '@material-ui/core';
 import LayoutsList from './components/LayoutsList';
 import arrayMove from 'array-move';
-import { EditLayout } from './components/EditLayout';
+import EditLayout from './components/EditLayout';
 import AddLayoutDialog from './components/addLayoutDialog';
 import TemplatePreview from './components/TemplatePreview';
 
@@ -58,7 +58,7 @@ const layoutsTemplate = (type,payload) => {
 			type: 'image',
 			properties: {
 				src: payload.url,
-				x:0,y:0,height: 5,width:5
+				x:8,y:8,height: 5,width:5
 			}
 		};
 	case 'text': 
@@ -79,12 +79,13 @@ class EditTemplate extends React.Component {
 		template,
 		selectedLayout: null,
 		isAddOpen: false,
+		selectedLayoutIndex: -1
 	};
 
 	onLayoutClick(index){
 		const {layouts} = this.state.template;
 		console.log('click', layouts[index].type);
-		this.setState({selectedLayout: layouts[index]});
+		this.setState({selectedLayout: layouts[index], selectedLayoutIndex: index});
 	}
 
 	onSortEnd = ({oldIndex, newIndex}) => {
@@ -96,6 +97,7 @@ class EditTemplate extends React.Component {
 
 	handleAddClose(type,payload){
 		if(!type) {
+			this.setState({isAddOpen: false});
 			return;
 		}
 		console.log('close', type);
@@ -104,6 +106,12 @@ class EditTemplate extends React.Component {
 		template.layouts.push(layoutsTemplate(type,payload));
 		
 		this.setState({isAddOpen: false, template});
+	}
+
+	onUpdateLayout(layout){
+		let {template, selectedLayoutIndex} = this.state;
+		template.layouts[selectedLayoutIndex] = layout;
+		this.setState({template});
 	}
 
 	render() {
@@ -129,6 +137,7 @@ class EditTemplate extends React.Component {
 					{selectedLayout && <EditLayout 
 						layout={selectedLayout} 
 						onBack={() => this.setState({selectedLayout: null})}
+						onUpdate={this.onUpdateLayout.bind(this)}
 					/>}
 				</Grid>
 				<Grid item md={9}>
