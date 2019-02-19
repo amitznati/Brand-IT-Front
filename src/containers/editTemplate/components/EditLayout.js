@@ -43,7 +43,9 @@ class EditLayout extends React.Component {
 				<CoreText
 					label={field.name}
 					value={val}
-					handleTextChange={(e) => this.handleChange(field.name,e.target.value)}
+					handleTextChange={(v) => this.handleChange(field.name,v)}
+					max={30}
+					step="0.01"
 				/>
 			</div>
 		);
@@ -59,6 +61,8 @@ class EditLayout extends React.Component {
 					className={classes.textField}
 					value={val}
 					handleSliderChange={(v) => this.handleChange(field.name,v)}
+					
+					step={0.01}
 				/>
 			</div>
 		);

@@ -7,49 +7,26 @@ import arrayMove from 'array-move';
 import EditLayout from './components/EditLayout';
 import AddLayoutDialog from './components/addLayoutDialog';
 import TemplatePreview from './components/TemplatePreview';
-
+// import TemplateProperties from './components/TemplateProperties';
+import {template, products} from './../../mocks';
+import {CoreSlider} from './../../components/core';
 const styles = theme => ({
 
 	templatePaper: {
-		height: '100%',
-		background: '#0000000f',
+		// minHeight: '100%',
+		// background: '#0000000f',
 		position: 'relative',
 		overflow: 'auto',
-		padding: theme.spacing.unit
+		padding: 0,
+		margin: 0
 	},
 	rootGrid: {
-		height: '100%',
+		// minHeight: '100%',
 		padding: theme.spacing.unit
 	}
 }); 
 
-const template = {
-	height: 10,
-	width: 10,
-	layouts: [
-		{
-			type: 'image',
-			properties: {
-				src: 'https://material-ui.com/static/images/avatar/1.jpg',
-				height: 4,
-				width: 5,
-				x: 3,
-				y: 2
-			}
-		},
-		{
-			type: 'text',
-			properties: {
-				text: 'sdf sdf',
-				fontFamily: 'Myriad Hebrew',
-				fontSize: 10,
-				fontStyle: '',
-				x: 3,
-				y: 2
-			}
-		},
-	]
-};
+
 
 const layoutsTemplate = (type,payload) => {
 	switch(type) {
@@ -77,15 +54,27 @@ class EditTemplate extends React.Component {
 
 	state = {
 		template,
+		product: products[1],
 		selectedLayout: null,
 		isAddOpen: false,
-		selectedLayoutIndex: -1
+		selectedLayoutIndex: -1,
+		scale: 0.5
 	};
+
+	onTemplateChanged(template) {
+		this.setState({template});
+	}
 
 	onLayoutClick(index){
 		const {layouts} = this.state.template;
 		console.log('click', layouts[index].type);
 		this.setState({selectedLayout: layouts[index], selectedLayoutIndex: index});
+	}
+
+	onDeleteLayout(index) {
+		let {template} = this.state;
+		template.layouts.splice(index,1);
+		this.setState({template});
 	}
 
 	onSortEnd = ({oldIndex, newIndex}) => {
@@ -116,11 +105,14 @@ class EditTemplate extends React.Component {
 
 	render() {
 		const {classes} = this.props;
-		const {selectedLayout, template} = this.state;
+		const {selectedLayout, template, scale, product} = this.state;
 		const {layouts} = template;
 		
 		return (
 			<Grid container className={classes.rootGrid}>
+				{/* <Grid item xs={12}>
+					<TemplateProperties template={template} onTemplateChanged={this.onTemplateChanged.bind(this)}/>
+				</Grid> */}
 				<Grid item md={3}>
 					<Button variant="outlined" color="primary" onClick={() => this.setState({isAddOpen: true})}>
 					+ Add Layout
@@ -133,6 +125,7 @@ class EditTemplate extends React.Component {
 						onSortEnd={this.onSortEnd.bind(this)} 
 						layouts={layouts} 
 						onLayoutClick={this.onLayoutClick.bind(this)}
+						onDeleteLayout={this.onDeleteLayout.bind(this)}
 					/>}
 					{selectedLayout && <EditLayout 
 						layout={selectedLayout} 
@@ -141,8 +134,15 @@ class EditTemplate extends React.Component {
 					/>}
 				</Grid>
 				<Grid item md={9}>
+					<CoreSlider
+						label="Scale"
+						value={scale}
+						max={3}
+						step={0.001}
+						handleSliderChange={(v)=>this.setState({scale: Number(v)})}
+					/>
 					<div className={classes.templatePaper}>
-						<TemplatePreview template={template}/>
+						<TemplatePreview scale={scale} product={product} template={template}/>
 					</div>
 				</Grid>
 			</Grid>

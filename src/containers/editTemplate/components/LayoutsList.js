@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {Grid,Paper} from '@material-ui/core';
+import {Grid,Paper, Fab} from '@material-ui/core';
 import {ImageLayoutHeader, TextLayoutHeader} from './layoutsHeaders';
 import CoreSortableList from '../../../components/core/CoreSortableList';
 
 import {sortableHandle} from 'react-sortable-hoc';
 import ReorderIcon from '@material-ui/icons/Reorder';
+import DeleteIcon from '@material-ui/icons/Delete';
 const DragHandle = sortableHandle(() => <ReorderIcon style={{cursor: 'move'}}/>);
 
 const styles = theme => ({
@@ -23,6 +24,11 @@ const styles = theme => ({
 }); 
 class LayoutsList extends React.Component {
 
+	onDeleteLayout(e,i){
+		e.stopPropagation();
+		this.props.onDeleteLayout(i);
+
+	}
 	getLayoutHeader(l,i){
 		switch(l.type) {
 		case 'image':
@@ -39,8 +45,13 @@ class LayoutsList extends React.Component {
 			<Paper square className={classes.layoutPaper}>
 				<Grid container alignItems="center" className={classes.layoutGrid}>
 					<Grid item xs={2}><DragHandle/></Grid>
-					<Grid item xs={10}>
+					<Grid item xs={8}>
 						{this.getLayoutHeader(l,i)}
+					</Grid>
+					<Grid item xs={2}>
+						<Fab size='small'>
+							<DeleteIcon onClick={(e)=>this.onDeleteLayout(e,i)}/>
+						</Fab>
 					</Grid>
 				</Grid>
 			</Paper>
@@ -70,7 +81,8 @@ LayoutsList.propTypes = {
 	classes: PropTypes.object.isRequired,
 	layouts: PropTypes.array.isRequired,
 	onSortEnd: PropTypes.func,
-	onLayoutClick: PropTypes.func
+	onLayoutClick: PropTypes.func,
+	onDeleteLayout: PropTypes.func
 };
 
 export default withStyles(styles)(LayoutsList);

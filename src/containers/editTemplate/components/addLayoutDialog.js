@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 //import { withStyles } from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
-import {Dialog, DialogTitle, DialogActions,DialogContent, Button, Toolbar, AppBar, Tabs, Tab, Typography, IconButton} from '@material-ui/core';
+import {Dialog, Paper,Grid, DialogTitle, DialogActions,DialogContent, Button, Toolbar, AppBar, Tabs, Tab, Typography, IconButton} from '@material-ui/core';
 import ThemeImagesList from '../../themes/components/ThemeImagesList';
+import {logos} from './../../../mocks';
 function TabContainer(props) {
 	return (
 		<Typography component="div" >
@@ -62,7 +63,20 @@ class AddLayoutDialog extends React.Component {
 					</AppBar>
 				</DialogTitle>
 				<DialogContent>
-					{value === 0 && <TabContainer>Logo</TabContainer>}
+					{value === 0 && <TabContainer>
+						<Grid container>
+							{logos.map((l,i) => {
+								return (
+									<Grid item md={3} key={i} sty>
+										<Paper style={{textAlign: 'center', margin: '8px'}}>
+											<img src={l} style={{height: '200px'}} alt={'logo ' + i}/>
+										</Paper>
+									</Grid>
+								);
+							})}
+						</Grid>
+						
+					</TabContainer>}
 					{value === 1 && <TabContainer><ThemeImagesList isForSelect onSelect={this.onImageSelect.bind(this)}/></TabContainer>}
 					{value === 2 && <TabContainer>Text</TabContainer>}
 					{value === 3 && <TabContainer>Shape</TabContainer>}

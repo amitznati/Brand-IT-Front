@@ -11,7 +11,7 @@ const CoreText = props => {
 			<TextField
 				label={label}
 				value={value}
-				onChange={handleTextChange}
+				onChange={(e) => handleTextChange(e.target.value)}
 			/>
 		</FormControl>
 	);

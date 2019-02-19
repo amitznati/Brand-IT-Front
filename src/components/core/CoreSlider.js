@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import styles from '../../styles/styles';
 
 const CoreSlider = props => {
-	const {classes, value, handleSliderChange, withNumberInput = true,label} = props;
+	const {classes, value, handleSliderChange, withNumberInput = true,label, max=100,min=0,step=1} = props;
 	return (
 		<FormControl fullWidth >
 			<Typography>{label}</Typography>
@@ -16,16 +16,15 @@ const CoreSlider = props => {
 						value={value}
 						className={classes.slider}
 						onChange={(e,v) => handleSliderChange(v)}
-						max={30}
-						step="0.01"
+						max={max}
+						min={min}
+						step={step}
 					/>
 				</Grid>
 				{withNumberInput && <Grid item xs={3}>
 					<Input
 						type="number"
 						value={value}
-						max={30}
-						step="0.01"
 						onChange={e=>handleSliderChange(e.target.value)}
 					/>
 				</Grid>}
@@ -39,7 +38,10 @@ CoreSlider.propTypes = {
 	value: PropTypes.number.isRequired,
 	handleSliderChange: PropTypes.func.isRequired,
 	withNumberInput: PropTypes.bool,
-	label: PropTypes.string.isRequired
+	label: PropTypes.string.isRequired,
+	max: PropTypes.number,
+	min: PropTypes.number,
+	step: PropTypes.number
 };
 
 export default withStyles(styles)(CoreSlider);

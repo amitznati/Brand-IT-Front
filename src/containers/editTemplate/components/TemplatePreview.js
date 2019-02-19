@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Paper} from '@material-ui/core';
+// import {Paper} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 //import styles from './../../../styles/styles';
 
 const styles = theme => ({
 	templateRoot: {
-		background: 'white',
+		//background: 'white',
 		position: 'absolute',
 		margin: 'auto',
 		top: 0,
@@ -29,7 +29,7 @@ class TemplatePreview extends React.Component {
 	// }
 
 	getPX(cm){
-		const s = this.props.scale || 1;
+		const s = this.props.scale || 0.1;
 		return cm * s * (96 / 2.54);
 	}
 
@@ -52,6 +52,7 @@ class TemplatePreview extends React.Component {
 			<span key={index} 
 				style={{
 					position: 'absolute',
+					whiteSpace: 'nowrap',
 					fontFamily: p.fontFamily,
 					fontSize: (scale * p.fontSize) + 'pt',
 					fontStyle: p.fontStyle,
@@ -68,11 +69,20 @@ class TemplatePreview extends React.Component {
 	};
 
 	render() {
-		const {classes, template} = this.props;
+		const {template: { layouts},product } = this.props;
+		const productH = this.getPX(product.productSize.height);
+		const productW = this.getPX(product.productSize.width);
+		const templateH = this.getPX(product.templatePosition.height);
+		const templateW = this.getPX(product.templatePosition.width);
+		const templateX = this.getPX(product.templatePosition.x);
+		const templateY = this.getPX(product.templatePosition.y);
 		return (
-			<Paper className={classes.templateRoot} style={{height: this.getPX(template.height), width: this.getPX(template.width)}}>
-				{template.layouts.map((l,i) => this.renderLayout[l.type](l,i))}
-			</Paper>
+			<div style={{height: productH,width: productW, position: 'relative'}}>
+				<img src={product.image} alt="product" style={{height: productH,width: productW, position: 'absolute'}}/>
+				<div style={{height: templateH,width: templateW, position: 'absolute', overflow: 'hidden', bottom: templateY, left: templateX}}>
+					{layouts.map((l,i) => this.renderLayout[l.type](l,i))}
+				</div>
+			</div>
 		);
 	}
 	
@@ -81,7 +91,8 @@ class TemplatePreview extends React.Component {
 TemplatePreview.propTypes = {
 	classes: PropTypes.object.isRequired,
 	template: PropTypes.object.isRequired,
-	scale: PropTypes.number
+	scale: PropTypes.number,
+	product: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(TemplatePreview);
