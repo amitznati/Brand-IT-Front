@@ -6,6 +6,8 @@ import React from 'react';
 //import CategoryCard from './components/CategoryCard';
 import CoreDataView from '../../components/core/CoreDataView';
 //import ReactVirtualizedTable from '../../components/core/ReactVirtualizedTable';
+import {mockService} from './../../mocks';
+const {call,methods,apis} = mockService;
 const styles = theme => ({
 	button: {
 		float: 'right'
@@ -14,35 +16,23 @@ const styles = theme => ({
 		padding: theme.spacing.unit
 	}
 });
-const data = [
-	['Frozen yoghurt'],
-	['Ice cream sandwich'],
-	['Eclair'],
-	['Cupcake'],
-	['Gingerbread'],
-];
-
-let id = 0;
-function createData(name) {
-	id += 1;
-	return { id, name, image: 'https://material-ui.com/static/images/cards/contemplative-reptile.jpg' };
-}
-
-const rows = [];
-
-for (let i = 0; i < 20; i += 1) {
-	const randomSelection = data[Math.floor(Math.random() * data.length)];
-	rows.push(createData(...randomSelection));
-}
 
 
 class Products extends React.Component {
-
+	constructor(props){
+		super(props);
+		this.state = {
+			products: call(apis.PRODUCTS,methods.ALL),
+		};
+	}
 	render() {
-		//const {classes} = this.props;
+		const {products} = this.state;
+		if(!products) {
+			return '';
+		}
 		return (
 			<CoreDataView 
-				data={rows} 
+				data={products} 
 				title='Products'
 				single='Product'
 				cardTitleObjName='name'

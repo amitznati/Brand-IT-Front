@@ -26,9 +26,13 @@ const styles = theme => ({
 class EditKit extends React.Component {
 	constructor(props){
 		super(props);
+		const product = ResourceTemplates.PRODUCT;
+		let template = ResourceTemplates.TEMPLATE;
+		template.layouts[0].properties.height = product.templateFrame.height;
+		template.layouts[0].properties.width = product.templateFrame.width;
 		this.state = {
-			product: ResourceTemplates.PRODUCT,
-			template: ResourceTemplates.TEMPLATE,
+			product,
+			template,
 			scale: 0.5
 		};
 	}
@@ -50,11 +54,14 @@ class EditKit extends React.Component {
 		};
 	}
 
-	consponentDidMount() {
+	componentDidMount() {
 		let params = (new URL(document.location)).searchParams;
 		if(params.has('id')) {
 			const product = call(apis.PRODUCTS,methods.BYID,params.get('id'));
-			this.setState({product});
+			let {template} = this.state;
+			template.layouts[0].properties.height = product.templateFrame.height;
+			template.layouts[0].properties.width = product.templateFrame.width;
+			this.setState({product,template});
 		}
 	}
 

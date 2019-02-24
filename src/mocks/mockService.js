@@ -36,13 +36,13 @@ const call = (resource,mothod,payload) => {
 	}
 	switch(mothod) {
 	case methods.ALL:
-		return api[resource];
+		return jsonCopy(api[resource]);
 	case methods.BYID:
 		return jsonCopy(api[resource].find(r => r.id === Number(payload)));
 	case methods.CREATE:
 		return createResource(resource,payload);
 	default:
-		return null;	
+		return null;
 	}
 };
 const mockService = {

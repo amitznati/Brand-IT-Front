@@ -94,7 +94,7 @@ class CoreDataView extends React.Component {
 										return (
 											<Grid className={classes.padding} key={i} item md={3}>
 												<CoreCard
-													cardid={i}
+													cardid={d.id}
 													title={d[cardTitleObjName]}
 													editPath={editPath}
 													image={d[cardImageObjName]}

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {Card, CardHeader, Menu, CardMedia, MenuItem, Typography, IconButton} from '@material-ui/core';
+import {Card, CardHeader, Menu, Grid, CardContent, MenuItem, Typography, IconButton} from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {Link} from 'react-router-dom';
 
@@ -62,19 +62,25 @@ class CoreCard extends React.Component {
 						{title}
 					</Typography>}
 				/>
-				<CardMedia
+				{/* <CardMedia
 					component="img"
 					alt={title}
 					className={classes.media}
 					height="140"
 					image={image}
 					title={title}
-				/>
-				{/* <CardContent>
-					<Typography component="p">
-						some description
-					</Typography>
-				</CardContent> */}
+				/> */}
+				<CardContent>
+					<Grid
+						container
+						direction="row"
+						justify="center"
+						alignItems="center">
+						<Grid item xs={10} style={{textAlign: 'center'}}>
+							<img src={image} alt={title} style={{height: '100px'}}/>
+						</Grid>
+					</Grid>
+				</CardContent>
 			</Card>
 		);
 	}
