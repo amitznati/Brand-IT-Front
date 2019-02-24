@@ -61,7 +61,6 @@ class EditLayout extends React.Component {
 					className={classes.textField}
 					value={val}
 					handleSliderChange={(v) => this.handleChange(field.name,v)}
-					
 					step={0.01}
 				/>
 			</div>

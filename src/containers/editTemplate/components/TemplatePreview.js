@@ -17,6 +17,11 @@ const styles = theme => ({
 	},
 	padding: {
 		padding: theme.spacing.unit
+	},
+	productImage: {
+		//boxShadow: '2px 3px 14px -3px rgba(0,0,0,0.75)',
+		position: 'absolute'
+		
 	}
 });
 
@@ -69,17 +74,17 @@ class TemplatePreview extends React.Component {
 	};
 
 	render() {
-		const {template: { layouts},product } = this.props;
+		const {template: { layouts},product, classes } = this.props;
 		const productH = this.getPX(product.productSize.height);
 		const productW = this.getPX(product.productSize.width);
-		const templateH = this.getPX(product.templatePosition.height);
-		const templateW = this.getPX(product.templatePosition.width);
-		const templateX = this.getPX(product.templatePosition.x);
-		const templateY = this.getPX(product.templatePosition.y);
+		const templateH = this.getPX(product.templateFrame.height);
+		const templateW = this.getPX(product.templateFrame.width);
+		const templateX = this.getPX(product.templateFrame.x);
+		const templateY = this.getPX(product.templateFrame.y);
 		return (
-			<div style={{height: productH,width: productW, position: 'relative'}}>
-				<img src={product.image} alt="product" style={{height: productH,width: productW, position: 'absolute'}}/>
-				<div style={{height: templateH,width: templateW, position: 'absolute', overflow: 'hidden', bottom: templateY, left: templateX}}>
+			<div style={{height: productH + 10,width: productW +10, position: 'relative'}}>
+				<img className={classes.productImage} src={product.image} alt="product" style={{height: productH,width: productW}}/>
+				<div style={{height: templateH,width: templateW, position: 'absolute', overflow: 'hidden', bottom: templateY + 10, left: templateX}}>
 					{layouts.map((l,i) => this.renderLayout[l.type](l,i))}
 				</div>
 			</div>

@@ -1,20 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {Grid, Button} from '@material-ui/core';
+import {Grid, Button, Paper} from '@material-ui/core';
 import LayoutsList from './components/LayoutsList';
 import arrayMove from 'array-move';
 import EditLayout from './components/EditLayout';
 import AddLayoutDialog from './components/addLayoutDialog';
 import TemplatePreview from './components/TemplatePreview';
-// import TemplateProperties from './components/TemplateProperties';
-import {template, products} from './../../mocks';
+import ProductProperties from './components/ProductProperties';
+import {mockService} from './../../mocks';
 import {CoreSlider} from './../../components/core';
+const {call,methods,apis} = mockService;
 const styles = theme => ({
 
 	templatePaper: {
-		// minHeight: '100%',
-		// background: '#0000000f',
 		position: 'relative',
 		overflow: 'auto',
 		padding: 0,
@@ -53,8 +52,8 @@ const layoutsTemplate = (type,payload) => {
 class EditTemplate extends React.Component {
 
 	state = {
-		template,
-		product: products[1],
+		template: call(apis.TEMPLATES,methods.BYID,1),
+		product: call(apis.PRODUCTS,methods.BYID,1),
 		selectedLayout: null,
 		isAddOpen: false,
 		selectedLayoutIndex: -1,
@@ -103,6 +102,10 @@ class EditTemplate extends React.Component {
 		this.setState({template});
 	}
 
+	saveTemplate = () => {
+		mockService('templates','create',this.state.template);
+	}
+
 	render() {
 		const {classes} = this.props;
 		const {selectedLayout, template, scale, product} = this.state;
@@ -110,9 +113,17 @@ class EditTemplate extends React.Component {
 		
 		return (
 			<Grid container className={classes.rootGrid}>
-				{/* <Grid item xs={12}>
-					<TemplateProperties template={template} onTemplateChanged={this.onTemplateChanged.bind(this)}/>
-				</Grid> */}
+				<Grid item xs={12}>
+					<Button variant="outlined" color="primary" onClick={this.saveTemplate}>
+						Save
+					</Button>
+				</Grid>
+				<Grid item xs={12}>
+					<Paper>
+						<ProductProperties  product={product} onProductChanged={(p) => this.setState({product: p})}/>
+					</Paper>
+					
+				</Grid>
 				<Grid item md={3}>
 					<Button variant="outlined" color="primary" onClick={() => this.setState({isAddOpen: true})}>
 					+ Add Layout

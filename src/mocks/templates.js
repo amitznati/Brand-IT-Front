@@ -1,4 +1,4 @@
-export const template =
+export const templates = [
 	{
 		id: 1,
 		layouts: [
@@ -24,6 +24,7 @@ export const template =
 				}
 			},
 		]
-	};
+	}
+];
 
-export default template;
+export default templates;

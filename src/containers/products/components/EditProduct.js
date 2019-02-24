@@ -3,66 +3,144 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
 //import ReactVirtualizedTable from '../../../components/core/ReactVirtualizedTable';
-import {CoreText} from './../../../components/core';
+import {CoreText,CoreSlider} from './../../../components/core';
+import {mockService, ResourceTemplates} from './../../../mocks';
+import TemplatePreview from '../../editTemplate/components/TemplatePreview';
+const {call,methods,apis} = mockService;
+
 const styles = theme => ({
 	button: {
 		float: 'right'
 	},
 	padding: {
 		padding: theme.spacing.unit
+	},
+	gridRoot: {
+		'div': {
+			padding: theme.spacing.unit
+		}
 	}
 });
-const data = [
-	['Frozen yoghurt'],
-	['Ice cream sandwich'],
-	['Eclair'],
-	['Cupcake'],
-	['Gingerbread'],
-];
-
-let id = 0;
-function createData(name) {
-	id += 1;
-	return { id, name, image: 'https://material-ui.com/static/images/cards/contemplative-reptile.jpg' };
-}
-
-const rows = [];
-
-for (let i = 0; i < 50; i += 1) {
-	const randomSelection = data[Math.floor(Math.random() * data.length)];
-	rows.push(createData(...randomSelection));
-}
 
 
 class EditKit extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			name: ''
+			product: ResourceTemplates.PRODUCT,
+			template: ResourceTemplates.TEMPLATE,
+			scale: 0.5
 		};
 	}
 
-	handleNameChange = event => {
-		this.setState({name: event.target.value });
-	};
+	getViewProperties = () => {
+		const { product } = this.state;
+		const {
+			name: productName,
+			productSize: {height: productH,width: productW }, 
+			templateFrame: {height: templateFrameH, width: templateFrameW, x: templateFrameX, y: templateFrameY}} = product;
+		return {
+			productName,
+			productH,
+			productW,
+			templateFrameH,
+			templateFrameW,
+			templateFrameX,
+			templateFrameY
+		};
+	}
+
+	consponentDidMount() {
+		let params = (new URL(document.location)).searchParams;
+		if(params.has('id')) {
+			const product = call(apis.PRODUCTS,methods.BYID,params.get('id'));
+			this.setState({product});
+		}
+	}
+
+	onProductSizeChanged = (name, value) => {
+		let {product} = this.state;
+		product.productSize[name] = value;
+		this.setState({product});
+	}
+
+	ontemplateFrameChanged = (name,value) => {
+		let {product,template} = this.state;
+		product.templateFrame[name] = value;
+		template.layouts[0].properties[name] = value;
+		this.setState({product});
+	}
+
+	onNameChanged = (value) => {
+		let {product} = this.state;
+		product.name = value;
+		this.setState({product});
+	}
+
+	onProductChanged(product) {
+		this.setState({product});
+	}
     
 	render() {
 		const {classes} = this.props;
-		const {name} = this.state;
+		const {product, scale, template} = this.state;
+		const props = this.getViewProperties();
+
 		return (
 			<div>
 				<Grid container
 					direction="row"
 					justify="space-between"
 					alignItems="flex-end"
-					spacing={16}
-					className={classes.padding}
+					className={classes.gridRoot}
 				>
 					<Grid item md={3}>
-						<CoreText 
-							label="Name" 
-							value={name}
-							handleTextChange={this.handleNameChange.bind(this)}
+						<CoreText
+							label="Name"
+							value={props.productName}
+							handleTextChange={(v) => this.onNameChanged(v)}
+						/>
+					</Grid>
+					<Grid item md={3}>
+						<CoreSlider
+							label="Width"
+							value={props.productW}
+							handleSliderChange={(v)=> this.onProductSizeChanged('width',v)}
+						/>
+					</Grid>
+					<Grid item md={3}>
+						<CoreSlider
+							label="height"
+							value={props.productH}
+							handleSliderChange={(v)=> this.onProductSizeChanged('height',v)}
+						/>
+					</Grid>
+					<Grid item md={3}>
+						<CoreSlider
+							label="Template Height"
+							value={props.templateFrameH}
+							handleSliderChange={(v)=> this.ontemplateFrameChanged('height',v)}
+						/>
+					</Grid>
+					<Grid item md={3}>
+						<CoreSlider
+							label="Template Width"
+							value={props.templateFrameW}
+							handleSliderChange={(v)=> this.ontemplateFrameChanged('width',v)}
+						/>
+					</Grid>
+					<Grid item md={3}>
+						<CoreSlider
+							label="Template X"
+							value={props.templateFrameX}
+							handleSliderChange={(v)=> this.ontemplateFrameChanged('x',v)}
+						/>
+					</Grid>
+					<Grid item md={3}>
+						<CoreSlider
+							label="Template Y"
+							value={props.templateFrameY}
+							handleSliderChange={(v)=> this.ontemplateFrameChanged('y',v)}
 						/>
 					</Grid>
 					<Grid item md={3} >
@@ -71,8 +149,17 @@ class EditKit extends React.Component {
 						</Button>
 					</Grid>
 				</Grid>
-				<Grid container>
-					
+				<Grid item xs={12}>
+					<CoreSlider
+						label="Scale"
+						value={scale}
+						max={3}
+						step={0.001}
+						handleSliderChange={(v)=>this.setState({scale: Number(v)})}
+					/>
+					<div className={classes.templatePaper}>
+						<TemplatePreview scale={scale} product={product} template={template}/>
+					</div>
 				</Grid>
 			</div>
 		);
