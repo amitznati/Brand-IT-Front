@@ -6,8 +6,8 @@ import React from 'react';
 //import CategoryCard from './components/CategoryCard';
 import CoreDataView from '../../components/core/CoreDataView';
 //import ReactVirtualizedTable from '../../components/core/ReactVirtualizedTable';
-import {mockService} from './../../mocks';
-const {call,methods,apis} = mockService;
+//import {mockService} from './../../mocks';
+//const {call,methods,apis} = mockService;
 const styles = theme => ({
 	button: {
 		float: 'right'
@@ -21,8 +21,9 @@ const styles = theme => ({
 class Products extends React.Component {
 	constructor(props){
 		super(props);
+		const data = localStorage.getItem('data');
 		this.state = {
-			products: call(apis.PRODUCTS,methods.ALL),
+			products: (data && data.products) || [],
 		};
 	}
 	render() {

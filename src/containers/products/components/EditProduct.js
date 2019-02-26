@@ -26,6 +26,7 @@ const styles = theme => ({
 class EditProduct extends React.Component {
 	constructor(props){
 		super(props);
+		this.fileupload = React.createRef();
 		const product = ResourceTemplates.PRODUCT;
 		let template = ResourceTemplates.TEMPLATE;
 		template.layouts[0].properties.height = product.templateFrame.height;
@@ -57,7 +58,8 @@ class EditProduct extends React.Component {
 	componentDidMount() {
 		let params = (new URL(document.location)).searchParams;
 		if(params.has('id')) {
-			const product = call(apis.PRODUCTS,methods.BYID,params.get('id'));
+			const data = localStorage.getItem('data');
+			const product = data && data.products && data.products.find(p=>p.id = params.get('id')); 
 			let {template} = this.state;
 			template.layouts[0].properties.height = product.templateFrame.height;
 			template.layouts[0].properties.width = product.templateFrame.width;
@@ -88,6 +90,10 @@ class EditProduct extends React.Component {
 		this.setState({product});
 	}
 
+	onImageChanged() {
+		console.log(this.fileupload);
+	}
+
 	save() {
 		call(apis.PRODUCTS,methods.UPDATE,this.state.product);
 		this.props.updateStorage();
@@ -107,6 +113,11 @@ class EditProduct extends React.Component {
 					alignItems="flex-end"
 					className={classes.gridRoot}
 				>
+					<Grid item md={3} >
+						<Button onClick={this.save.bind(this)} variant="outlined" color="primary" style={{float: 'right'}}>
+							Save
+						</Button>
+					</Grid>
 					<Grid item md={3}>
 						<CoreText
 							label="Name"
@@ -156,13 +167,24 @@ class EditProduct extends React.Component {
 							handleSliderChange={(v)=> this.ontemplateFrameChanged('y',v)}
 						/>
 					</Grid>
-					<Grid item md={3} >
-						<Button onClick={this.save.bind(this)} variant="outlined" color="primary" style={{float: 'right'}}>
-							Save
-						</Button>
-					</Grid>
+					
 				</Grid>
 				<Grid item xs={12}>
+					<input 
+						ref={this.fileupload}
+						type='file'
+						id='image'
+						onChange={this.onImageChanged.bind(this)}
+						style={{display: 'none'}}
+					/>
+					<Button
+						type='file'
+						onClick={() => {
+							this.fileupload.current.click();
+						}}
+					>
+						Upload Image
+					</Button>
 					<CoreSlider
 						label="Scale"
 						value={scale}
