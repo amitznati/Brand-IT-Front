@@ -5,6 +5,7 @@ import store from './store';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './utils/setAuthToken';
 import { setCurrentUser, logoutUser } from './actions/authentication';
+import {mockService} from './mocks';
 import EditTemplate from './containers/editTemplate/EditTemplate';
 import Themes from './containers/themes/Themes';
 import EditTheme from './containers/themes/components/EditTheme';
@@ -30,6 +31,65 @@ if(localStorage.jwtToken) {
 }
 
 class App extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			data: {}
+		};
+	}
+	componentDidMount() {
+		this.hydrateStateWithLocalStorage();
+	
+		// add event listener to save state to localStorage
+		// when user leaves/refreshes the page
+		window.addEventListener(
+			'beforeunload',
+			this.saveStateToLocalStorage.bind(this)
+		);
+	}
+	
+	componentWillUnmount() {
+		window.removeEventListener(
+			'beforeunload',
+			this.saveStateToLocalStorage.bind(this)
+		);
+	
+		// saves if component has a chance to unmount
+		this.saveStateToLocalStorage();
+	}
+	
+	hydrateStateWithLocalStorage() {
+		// for all items in state
+		for (let key in this.state) {
+		// if the key exists in localStorage
+			if (localStorage.hasOwnProperty(key)) {
+				// get the key's value from localStorage
+				let value = localStorage.getItem(key);
+		
+				// parse the localStorage string and setState
+				try {
+					value = JSON.parse(value);
+					this.setState({ [key]: value });
+				} catch (e) {
+				// handle empty string
+					this.setState({ [key]: value });
+				}
+			}
+		}
+	}
+	
+	saveStateToLocalStorage() {
+		// for every item in React state
+		for (let key in this.state) {
+		// save to localStorage
+			localStorage.setItem(key, JSON.stringify(this.state[key]));
+		}
+	}
+
+	updateStorage = () => {
+		this.setState({data: mockService.data});
+	}
+	
 	render() {
 		return (
 			<Provider store = { store }>
@@ -39,20 +99,16 @@ class App extends Component {
 						<Route exact path="/edit-template" component={ EditTemplate } />
 
 						<Route exact path="/themes" component={ Themes } />
-						<Route exact path="/edit-theme/:id" component={ EditTheme } />
 						<Route exact path="/edit-theme" component={ EditTheme } />
 
 						<Route exact path="/categories" component={ Categories } />
 						<Route exact path="/edit-category" component={ EditCategory } />
-						<Route exact path="/edit-category:id" component={ EditCategory } />
 
 						<Route exact path="/kits" component={ Kits } />
 						<Route exact path="/edit-kit" component={ EditKit } />
-						<Route exact path="/edit-kit:id" component={ EditKit } />
 						
 						<Route exact path="/products" component={ Products } />
-						<Route exact path="/edit-product" component={ EditProduct } />
-						<Route exact path="/edit-product:id" component={ EditProduct } />
+						<Route exact path="/edit-product" render={(routerProps) => (<EditProduct test={true} updateStorage={this.updateStorage} {...routerProps} />)} />
 					</Layout>
 				</Router>
 			</Provider>

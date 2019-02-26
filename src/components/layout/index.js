@@ -98,14 +98,13 @@ class Layout extends React.Component {
 	};
 
 	render() {
-		const { classes } = this.props;
-
+		const { classes, children } = this.props;
 		return (
 			<div className={classes.root}>
 				<Header classes={classes} handleDrawerOpen={this.handleDrawerOpen} open={this.state.open}/>
 				<SideBar classes={classes} handleDrawerClose={this.handleDrawerClose} open={this.state.open}/>
 				<main className={classes.content}>
-					{this.props.children}
+					{children}
 				</main>
 			</div>
 		);

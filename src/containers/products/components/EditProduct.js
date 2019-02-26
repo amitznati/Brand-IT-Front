@@ -23,7 +23,7 @@ const styles = theme => ({
 });
 
 
-class EditKit extends React.Component {
+class EditProduct extends React.Component {
 	constructor(props){
 		super(props);
 		const product = ResourceTemplates.PRODUCT;
@@ -87,7 +87,13 @@ class EditKit extends React.Component {
 	onProductChanged(product) {
 		this.setState({product});
 	}
-    
+
+	save() {
+		call(apis.PRODUCTS,methods.UPDATE,this.state.product);
+		this.props.updateStorage();
+		window.location = '/products';
+	}
+
 	render() {
 		const {classes} = this.props;
 		const {product, scale, template} = this.state;
@@ -151,7 +157,7 @@ class EditKit extends React.Component {
 						/>
 					</Grid>
 					<Grid item md={3} >
-						<Button variant="outlined" color="primary" style={{float: 'right'}}>
+						<Button onClick={this.save.bind(this)} variant="outlined" color="primary" style={{float: 'right'}}>
 							Save
 						</Button>
 					</Grid>
@@ -172,8 +178,9 @@ class EditKit extends React.Component {
 		);
 	}
 }
-EditKit.propTypes = {
+EditProduct.propTypes = {
 	classes: PropTypes.object.isRequired,
+	updateStorage: PropTypes.func,
 };
 
-export default withStyles(styles)(EditKit);
+export default withStyles(styles)(EditProduct);
