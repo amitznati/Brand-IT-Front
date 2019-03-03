@@ -5,7 +5,7 @@ import store from './store';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './utils/setAuthToken';
 import { setCurrentUser, logoutUser } from './actions/authentication';
-import {mockService} from './mocks';
+//import {mockService} from './mocks';
 import EditTemplate from './containers/editTemplate/EditTemplate';
 import Themes from './containers/themes/Themes';
 import EditTheme from './containers/themes/components/EditTheme';
@@ -31,64 +31,98 @@ if(localStorage.jwtToken) {
 }
 
 class App extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			data: {}
-		};
-	}
-	componentDidMount() {
-		this.hydrateStateWithLocalStorage();
+	// constructor(props) {
+	// 	super(props);
+	// 	this.state = {
+	// 		data: {}
+	// 	};
+	// }
+	// componentDidMount() {
+	// 	this.hydrateStateWithLocalStorage();
 	
-		// add event listener to save state to localStorage
-		// when user leaves/refreshes the page
-		window.addEventListener(
-			'beforeunload',
-			this.saveStateToLocalStorage.bind(this)
-		);
-	}
+	// 	// add event listener to save state to localStorage
+	// 	// when user leaves/refreshes the page
+	// 	window.addEventListener(
+	// 		'beforeunload',
+	// 		this.saveStateToLocalStorage.bind(this)
+	// 	);
+	// }
 	
-	componentWillUnmount() {
-		window.removeEventListener(
-			'beforeunload',
-			this.saveStateToLocalStorage.bind(this)
-		);
+	// componentWillUnmount() {
+	// 	window.removeEventListener(
+	// 		'beforeunload',
+	// 		this.saveStateToLocalStorage.bind(this)
+	// 	);
 	
-		// saves if component has a chance to unmount
-		this.saveStateToLocalStorage();
-	}
+	// 	// saves if component has a chance to unmount
+	// 	this.saveStateToLocalStorage();
+	// }
 	
-	hydrateStateWithLocalStorage() {
-		// for all items in state
-		for (let key in this.state) {
-		// if the key exists in localStorage
-			if (localStorage.hasOwnProperty(key)) {
-				// get the key's value from localStorage
-				let value = localStorage.getItem(key);
+	// hydrateStateWithLocalStorage() {
+	// 	// for all items in state
+	// 	for (let key in this.state) {
+	// 	// if the key exists in localStorage
+	// 		if (localStorage.hasOwnProperty(key)) {
+	// 			// get the key's value from localStorage
+	// 			let value = localStorage.getItem(key);
 		
-				// parse the localStorage string and setState
-				try {
-					value = JSON.parse(value);
-					this.setState({ [key]: value });
-				} catch (e) {
-				// handle empty string
-					this.setState({ [key]: value });
-				}
-			}
-		}
-	}
+	// 			// parse the localStorage string and setState
+	// 			try {
+	// 				value = JSON.parse(value);
+	// 				this.setState({ [key]: value });
+	// 			} catch (e) {
+	// 			// handle empty string
+	// 				this.setState({ [key]: value });
+	// 			}
+	// 		}
+	// 	}
+	// }
 	
-	saveStateToLocalStorage() {
-		// for every item in React state
-		for (let key in this.state) {
-		// save to localStorage
-			localStorage.setItem(key, JSON.stringify(this.state[key]));
-		}
-	}
+	// saveStateToLocalStorage() {
+	// 	// for every item in React state
+	// 	for (let key in this.state) {
+	// 	// save to localStorage
+	// 		localStorage.setItem(key, JSON.stringify(this.state[key]));
+	// 	}
+	// }
 
-	updateStorage = () => {
-		this.setState({data: mockService.data});
-	}
+	// updateResourceStorage = (name,resourceList) => {
+	// 	let {data} = this.state;
+	// 	data[name] = resourceList;
+	// 	this.setState({data});
+	// }
+	// createResource(name,payload) {
+	// 	let data = this.getResourceList(name);
+	// 	const id = data.reduce((crr, cur) => crr.id > cur.id) +1;
+	// 	payload.id = id;
+	// 	data.push(payload);
+	// 	this.updateResourceStorage(name,data);
+	// }
+	// updateResource(name,payload) {
+	// 	let data = this.getResourceList(name);
+	// 	let newData = data.filter(r => r.id !== payload.id);
+	// 	newData.push(payload);
+	// 	this.updateResourceStorage(name,newData);
+	// }
+	// createOrUpdateResource = (name,payload) => {
+	// 	if(payload.id) {
+	// 		this.updateResource(name,payload);
+	// 	} else {
+	// 		this.createResource(name,payload);
+	// 	}
+	// }
+	// getResourceList = (name) => {
+	// 	const data = localStorage.getItem('data');
+	// 	try {
+	// 		const dataObj = JSON.parse(data);
+	// 		if(!dataObj) {
+	// 			return [];
+	// 		}
+	// 		return data[name] || [];
+	// 	} catch (e) {
+	// 		return [];
+	// 	}
+	// }
 	
 	render() {
 		return (
@@ -108,7 +142,7 @@ class App extends Component {
 						<Route exact path="/edit-kit" component={ EditKit } />
 						
 						<Route exact path="/products" component={ Products } />
-						<Route exact path="/edit-product" render={(routerProps) => (<EditProduct test={true} updateStorage={this.updateStorage} {...routerProps} />)} />
+						<Route exact path="/edit-product" component={ EditProduct } />
 					</Layout>
 				</Router>
 			</Provider>

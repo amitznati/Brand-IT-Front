@@ -58,11 +58,12 @@ class EditProduct extends React.Component {
 	componentDidMount() {
 		let params = (new URL(document.location)).searchParams;
 		if(params.has('id')) {
-			const data = localStorage.getItem('data');
-			const product = data && data.products && data.products.find(p=>p.id = params.get('id')); 
+			const product = call(apis.PRODUCTS,methods.BYID,params.get('id')); 
 			let {template} = this.state;
 			template.layouts[0].properties.height = product.templateFrame.height;
 			template.layouts[0].properties.width = product.templateFrame.width;
+			template.layouts[0].properties.x = product.templateFrame.x;
+			template.layouts[0].properties.y = product.templateFrame.y;
 			this.setState({product,template});
 		}
 	}
@@ -70,20 +71,20 @@ class EditProduct extends React.Component {
 	onProductSizeChanged = (name, value) => {
 		let {product} = this.state;
 		product.productSize[name] = value;
-		this.setState({product});
+		this.onProductChanged(product);
 	}
 
 	ontemplateFrameChanged = (name,value) => {
 		let {product,template} = this.state;
 		product.templateFrame[name] = value;
 		template.layouts[0].properties[name] = value;
-		this.setState({product});
+		this.setState({product,template});
 	}
 
 	onNameChanged = (value) => {
 		let {product} = this.state;
 		product.name = value;
-		this.setState({product});
+		this.onProductChanged(product);
 	}
 
 	onProductChanged(product) {
@@ -92,11 +93,21 @@ class EditProduct extends React.Component {
 
 	onImageChanged() {
 		console.log(this.fileupload);
+		let {product} = this.state;
+		const self = this;
+		var reader = new FileReader();
+		reader.addEventListener('loadend', function () {
+			var fileContent = reader.result;
+			product.image = fileContent;
+			console.log('fileContent', fileContent);
+			self.onProductChanged(product);
+		});
+		reader.readAsDataURL(this.fileupload.current.files[0]);
+		
 	}
 
 	save() {
-		call(apis.PRODUCTS,methods.UPDATE,this.state.product);
-		this.props.updateStorage();
+		call(apis.PRODUCTS,methods.UPDATE_OR_CREATE,this.state.product);
 		window.location = '/products';
 	}
 
@@ -113,7 +124,7 @@ class EditProduct extends React.Component {
 					alignItems="flex-end"
 					className={classes.gridRoot}
 				>
-					<Grid item md={3} >
+					<Grid item md={12} >
 						<Button onClick={this.save.bind(this)} variant="outlined" color="primary" style={{float: 'right'}}>
 							Save
 						</Button>
@@ -201,8 +212,7 @@ class EditProduct extends React.Component {
 	}
 }
 EditProduct.propTypes = {
-	classes: PropTypes.object.isRequired,
-	updateStorage: PropTypes.func,
+	classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(EditProduct);

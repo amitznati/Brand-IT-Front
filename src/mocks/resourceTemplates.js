@@ -4,7 +4,6 @@ function jsonCopy(src) {
 	return JSON.parse(JSON.stringify(src));
 }
 const TEMPLATE = {
-	id: 1,
 	layouts: [
 		{
 			type: 'image',
@@ -20,7 +19,6 @@ const TEMPLATE = {
 };
 
 const PRODUCT = {
-	id: 1,
 	name: '',
 	image: '',
 	productSize: {
@@ -33,37 +31,27 @@ const PRODUCT = {
 };
 
 const CATEGORY = {
-	id: 1,
 	name: 'Food & Restorants',
 };
 
 const KIT = {
-	id: 1,
-	categoryId: 1,
-	name: 'Italian',
-	inputAttributes: [
-		'Company Name','Slogen'
-	],
+	categoryId: undefined,
+	name: '',
+	inputAttributes: [],
 };
 
 const THEME = {
-	id: 1,
-	name: 'Waves',
-	kitId: 1,
-	photos: [
-		'https://via.placeholder.com/600/56a8c2'
-	],
-	templates: [
-		{productId: 1, templateId: 1}
-	]
+	name: '',
+	kitId: undefined,
+	photos: [],
+	templates: []
 };
 
 
 
 const LOGO = {
-	id: 1,
-	kitId: 1,
-	templateId: 1
+	kitId: undefined,
+	templateId: undefined
 };
 
 const ResourceTemplates = {

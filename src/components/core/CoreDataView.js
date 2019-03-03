@@ -4,7 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import {Tabs,Tab,Typography, Grid,Button, Paper}	from '@material-ui/core';
 import GridIcon from '@material-ui/icons/GridOn';
 import ListIcon from '@material-ui/icons/List';
-import ReactVirtualizedTable, { EnhancedTableToolbar } from './ReactVirtualizedTable';
+import ReactVirtualizedTable from './ReactVirtualizedTable';
+import CoreTableToolbar from './CoreTableToolbar';
 import {Link} from 'react-router-dom';
 import CoreCard from './CoreCard';
 
@@ -47,7 +48,9 @@ class CoreDataView extends React.Component {
 	};
 
 	render() {
-		const { classes, data, title, single, cardTitleObjName, cardImageObjName, editPath, columns } = this.props;
+		const { classes, data, title, single, cardTitleObjName, 
+			cardImageObjName, editPath, columns, 
+			filters, selectedFilters, onFilterChange, onAddFilter } = this.props;
 		const { value } = this.state;
 
 		return (
@@ -65,7 +68,14 @@ class CoreDataView extends React.Component {
 						</Link>
 					</Grid>
 					<Grid item xs={12}>
-						{title && <EnhancedTableToolbar title={title}/>}
+						{title && 
+						<CoreTableToolbar
+							filters={filters}
+							selectedFilters={selectedFilters}
+							onFilterChange={onFilterChange}
+							onAddFilter={onAddFilter}
+							title={title}/>
+						}
 						<div className={classes.root}>
 							
 							<Tabs
@@ -122,7 +132,11 @@ CoreDataView.propTypes = {
 	cardTitleObjName: PropTypes.string,
 	editPath: PropTypes.string,
 	columns: PropTypes.array,
-	cardImageObjName: PropTypes.string
+	cardImageObjName: PropTypes.string,
+	filters: PropTypes.array,
+	selectedFilters: PropTypes.array,
+	onFilterChange: PropTypes.func,
+	onAddFilter: PropTypes.func
 };
 
 export default withStyles(styles)(CoreDataView);
