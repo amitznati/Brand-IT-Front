@@ -18,7 +18,7 @@ const styles = theme => ({
 });
 
 const filters = [
-	{name: 'Name', key: 'name', isMulti: true, options: [{label: 'Paper Bag #Brown', value: '1'},{label: 'prod2', value: '1'}], value: [] },
+	{name: 'Name', key: 'name', isMulti: true, options: [{label: 'Paper Bag #Brown', value: 'Paper Bag #Brown'},{label: 'prod2', value: 'prod2'},{label: 'prod3', value: 'prod3'}], value: [] },
 ];
 
 // const selectedFilters = [
