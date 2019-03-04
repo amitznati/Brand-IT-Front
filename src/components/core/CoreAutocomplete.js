@@ -224,7 +224,7 @@ class CoreAutocomplete extends React.Component {
 
 	render() {
 		const { classes, theme , isMulti = false, 
-			options, label, placeholder, value, handleChange} = this.props;
+			options, label, placeholder, value, handleChange, isDisabled} = this.props;
 
 		const selectStyles = {
 			input: base => ({
@@ -239,7 +239,6 @@ class CoreAutocomplete extends React.Component {
 		return (
 			<div className={classes.root}>
 				<NoSsr>
-					{!isMulti &&
 					<Select
 						classes={classes}
 						styles={selectStyles}
@@ -255,26 +254,9 @@ class CoreAutocomplete extends React.Component {
 						onChange={handleChange}
 						placeholder={placeholder}
 						isClearable
+						isMulti={isMulti}
+						isDisabled={isDisabled}
 					/>
-					}
-					{isMulti &&
-					<Select
-						classes={classes}
-						styles={selectStyles}
-						textFieldProps={{
-							label: label,
-							InputLabelProps: {
-								shrink: true,
-							},
-						}}
-						options={options}
-						components={components}
-						value={value}
-						onChange={handleChange}
-						placeholder={placeholder}
-						isMulti
-					/>
-					}
 				</NoSsr>
 			</div>
 		);

@@ -92,14 +92,12 @@ class EditProduct extends React.Component {
 	}
 
 	onImageChanged() {
-		console.log(this.fileupload);
 		let {product} = this.state;
 		const self = this;
 		var reader = new FileReader();
 		reader.addEventListener('loadend', function () {
 			var fileContent = reader.result;
 			product.image = fileContent;
-			console.log('fileContent', fileContent);
 			self.onProductChanged(product);
 		});
 		reader.readAsDataURL(this.fileupload.current.files[0]);

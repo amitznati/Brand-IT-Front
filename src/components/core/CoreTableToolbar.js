@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
-import {withStyles, IconButton, Toolbar, Typography, Tooltip, Menu, MenuItem, Grid} from '@material-ui/core';
+import {withStyles, IconButton, Toolbar, Typography, Fab, Tooltip, Menu, MenuItem, Grid} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import CoreAutocomplete from './CoreAutocomplete';
@@ -38,6 +38,7 @@ class TableToolbar extends Component {
 		super(props);
 		this.state = {
 			anchorEl: null,
+			gridEl: null
 		};
 	}
 
@@ -64,17 +65,32 @@ class TableToolbar extends Component {
 	}
 
 	renderFilterField(f) {
+		const {classes} = this.props;
 		return (
-			<div>
-				<CoreAutocomplete
-					placeholder={f.name}
-					isMulti={f.isMulti}
-					value={f.value}
-					options={f.options}
-					label={f.name}
-					handleChange={this.handleFilterChange(f.key)}
+			<div id="input-field-1">
+				<Grid container
+					direction="row"
+					justify="center"
+					alignItems="center"
+					disabled
 				>
-				</CoreAutocomplete>
+					<Grid item xs={9}>
+						<CoreAutocomplete
+							placeholder={f.name}
+							isMulti={f.isMulti}
+							value={f.value}
+							options={f.options}
+							label={f.name}
+							handleChange={this.handleFilterChange(f.key)}
+							isDisabled={f.isDisabled}
+						/>
+					</Grid>
+					<Grid item xs={3}>
+						<Fab disabled={f.isDisabled} size="small" color="secondary" aria-label="Add" className={classes.margin}>
+							{' X '}
+						</Fab>
+					</Grid>
+				</Grid>	
 			</div>
 		);
 	}
@@ -140,7 +156,7 @@ class TableToolbar extends Component {
 					<Grid container>
 						{selectedFilters && selectedFilters.map(f=>{
 							return (
-								<Grid key={f.key} item md={3}>
+								<Grid key={f.key} item md={4}>
 									{this.renderFilterField(f)}
 								</Grid>
 							);
