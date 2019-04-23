@@ -52,7 +52,7 @@ const layoutsTemplate = (type,payload) => {
 class EditTemplate extends React.Component {
 
 	state = {
-		template: call(apis.TEMPLATES,methods.BYID,1),
+		template: {layouts: []}, //call(apis.TEMPLATES,methods.BYID,1),
 		product: call(apis.PRODUCTS,methods.BYID,1),
 		selectedLayout: null,
 		isAddOpen: false,
@@ -109,7 +109,7 @@ class EditTemplate extends React.Component {
 	render() {
 		const {classes} = this.props;
 		const {selectedLayout, template, scale, product} = this.state;
-		const {layouts} = template;
+		const {layouts = []} = template;
 		
 		return (
 			<Grid container className={classes.rootGrid}>

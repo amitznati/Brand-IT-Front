@@ -67,7 +67,7 @@ class AddLayoutDialog extends React.Component {
 						<Grid container>
 							{logos.map((l,i) => {
 								return (
-									<Grid item md={3} key={i} sty>
+									<Grid item md={3} key={i}>
 										<Paper style={{textAlign: 'center', margin: '8px'}}>
 											<img src={l} style={{height: '200px'}} alt={'logo ' + i}/>
 										</Paper>

@@ -74,7 +74,9 @@ class TemplatePreview extends React.Component {
 	};
 
 	render() {
-		const {template: { layouts},product, classes } = this.props;
+		const {template = {}} = this.props;
+		const {layouts = []} = template;
+		const {product, classes } = this.props;
 		const productH = this.getPX(product.productSize.height);
 		const productW = this.getPX(product.productSize.width);
 		const templateH = this.getPX(product.templateFrame.height);
@@ -82,9 +84,9 @@ class TemplatePreview extends React.Component {
 		const templateX = this.getPX(product.templateFrame.x);
 		const templateY = this.getPX(product.templateFrame.y);
 		return (
-			<div style={{height: productH + 10,width: productW +10, position: 'relative'}}>
+			<div style={{height: productH,width: productW, position: 'relative'}}>
 				<img className={classes.productImage} src={product.image} alt="product" style={{height: productH,width: productW}}/>
-				<div style={{height: templateH,width: templateW, position: 'absolute', overflow: 'hidden', bottom: templateY + 10, left: templateX}}>
+				<div style={{height: templateH,width: templateW, position: 'absolute', overflow: 'hidden', bottom: templateY, left: templateX}}>
 					{layouts.map((l,i) => this.renderLayout[l.type](l,i))}
 				</div>
 			</div>

@@ -62,8 +62,8 @@ class EditProduct extends React.Component {
 			let {template} = this.state;
 			template.layouts[0].properties.height = product.templateFrame.height;
 			template.layouts[0].properties.width = product.templateFrame.width;
-			template.layouts[0].properties.x = product.templateFrame.x;
-			template.layouts[0].properties.y = product.templateFrame.y;
+			template.layouts[0].properties.x = 0;
+			template.layouts[0].properties.y = 0;
 			this.setState({product,template});
 		}
 	}
@@ -77,7 +77,7 @@ class EditProduct extends React.Component {
 	ontemplateFrameChanged = (name,value) => {
 		let {product,template} = this.state;
 		product.templateFrame[name] = value;
-		template.layouts[0].properties[name] = value;
+		// template.layouts[0].properties[name] = value;
 		this.setState({product,template});
 	}
 
