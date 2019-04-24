@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import {Paper} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-//import styles from './../../../styles/styles';
+import DesignCanvas from './DesignCanvas';
+import URLImage from './URLImage';
 
 const styles = theme => ({
 	templateRoot: {
@@ -41,12 +41,14 @@ class TemplatePreview extends React.Component {
 	renderImage(layout, index) {
 		const p = layout.properties;
 		return (
-			<img key={index} src={p.src} alt={p.src} style={{
-				position: 'absolute',
-				bottom: this.getPX(p.y),
-				left: this.getPX(p.x), 
-				height: this.getPX(p.height),
-				width: this.getPX(p.width)}}
+			<URLImage
+				key={index}
+				x={p.x}
+				y={p.y}
+				height={this.getPX(p.height)}
+				width={this.getPX(p.width)}
+				src={p.src}
+				name={`image-${index}`}
 			/>
 		);
 	}
@@ -87,7 +89,10 @@ class TemplatePreview extends React.Component {
 			<div style={{height: productH,width: productW, position: 'relative'}}>
 				<img className={classes.productImage} src={product.image} alt="product" style={{height: productH,width: productW}}/>
 				<div style={{height: templateH,width: templateW, position: 'absolute', overflow: 'hidden', bottom: templateY, left: templateX}}>
-					{layouts.map((l,i) => this.renderLayout[l.type](l,i))}
+					{/* {layouts.map((l,i) => this.renderLayout[l.type](l,i))} */}
+					<DesignCanvas>
+						{layouts.map((l,i) => this.renderLayout[l.type](l,i))}
+					</DesignCanvas>
 				</div>
 			</div>
 		);
