@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image } from 'react-konva';
+import { Image, useStrictMode } from 'react-konva';
 
+useStrictMode(true);
 export default class URLImage extends React.Component {
 	static propTypes = {
 		src: PropTypes.string,
@@ -9,7 +10,9 @@ export default class URLImage extends React.Component {
 		y: PropTypes.number,
 		width: PropTypes.number,
 		height: PropTypes.number,
-		name: PropTypes.string
+		rotation: PropTypes.number,
+		name: PropTypes.string,
+		onUpdateNode: PropTypes.func
 	}
 	state = {
 		image: null
@@ -49,11 +52,15 @@ export default class URLImage extends React.Component {
 				width={this.props.width}
 				height={this.props.height}
 				image={this.state.image}
+				rotation={this.props.rotation}
 				ref={node => {
 					this.imageNode = node;
 				}}
 				draggable
+				onDragEnd={() => this.props.onUpdateNode(this.imageNode)}
 				name={this.props.name}
+				scaleX={1}
+				scaleY={1}
 			/>
 		);
 	}

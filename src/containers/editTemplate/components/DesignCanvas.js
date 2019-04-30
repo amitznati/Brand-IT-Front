@@ -5,7 +5,8 @@ import { Stage, Layer, Transformer } from 'react-konva';
 
 class TransformerComponent extends React.Component {
 	static propTypes = {
-		selectedShapeName: PropTypes.string
+		selectedShapeName: PropTypes.string,
+		onUpdateNode: PropTypes.func
 	}
 	componentDidMount() {
 		this.checkNode();
@@ -37,7 +38,7 @@ class TransformerComponent extends React.Component {
 		return (
 			<Transformer
 				
-				onTransformEnd={(e) => console.log(e.currentTarget)}
+				onTransformEnd={(e) => this.props.onUpdateNode(e.currentTarget.node())}
 				ref={node => {
 					this.transformer = node;
 				}}
@@ -48,7 +49,9 @@ class TransformerComponent extends React.Component {
 
 export default class DesignCanvas extends React.Component {
 	static propTypes = {
-		children: PropTypes.object
+		children: PropTypes.array,
+		onUpdateNode: PropTypes.func,
+		onLayoutClick: PropTypes.func
 	}
 	state = {
 		selectedShapeName: ''
@@ -74,6 +77,7 @@ export default class DesignCanvas extends React.Component {
 			this.setState({
 				selectedShapeName: name
 			});
+			this.props.onLayoutClick(Number(name));
 		} else {
 			this.setState({
 				selectedShapeName: ''
@@ -90,8 +94,8 @@ export default class DesignCanvas extends React.Component {
 				<Layer>
 					{this.props.children}
 					<TransformerComponent
-						onTransformEnd={() => console.log('end')}
 						selectedShapeName={this.state.selectedShapeName}
+						onUpdateNode={this.props.onUpdateNode}
 					/>
 				</Layer>
 			</Stage>

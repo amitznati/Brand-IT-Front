@@ -34,7 +34,7 @@ const layoutsTemplate = (type,payload) => {
 			type: 'image',
 			properties: {
 				src: payload.url,
-				x:8,y:8,height: 5,width:5
+				x:8,y:8,height: 5,width:5, rotation: 0
 			}
 		};
 	case 'text': 
@@ -64,11 +64,10 @@ class EditTemplate extends React.Component {
 		this.setState({template});
 	}
 
-	onLayoutClick(index){
+	onLayoutClick = (index) => {
 		const {layouts} = this.state.template;
-		console.log('click', layouts[index].type);
 		this.setState({selectedLayout: layouts[index], selectedLayoutIndex: index});
-	}
+	};
 
 	onDeleteLayout(index) {
 		let {template} = this.state;
@@ -88,7 +87,6 @@ class EditTemplate extends React.Component {
 			this.setState({isAddOpen: false});
 			return;
 		}
-		console.log('close', type);
 		let {template} = this.state;
 
 		template.layouts.push(layoutsTemplate(type,payload));
@@ -96,7 +94,7 @@ class EditTemplate extends React.Component {
 		this.setState({isAddOpen: false, template});
 	}
 
-	onUpdateLayout(layout){
+	onUpdateLayout = (layout) => {
 		let {template, selectedLayoutIndex} = this.state;
 		template.layouts[selectedLayoutIndex] = layout;
 		this.setState({template});
@@ -153,7 +151,13 @@ class EditTemplate extends React.Component {
 						handleSliderChange={(v)=>this.setState({scale: Number(v)})}
 					/>
 					<div className={classes.templatePaper}>
-						<TemplatePreview scale={scale} product={product} template={template}/>
+						<TemplatePreview 
+							scale={scale} 
+							product={product} 
+							template={template}
+							onUpdateLayout={this.onUpdateLayout}
+							onLayoutClick={this.onLayoutClick}
+						/>
 					</div>
 				</Grid>
 			</Grid>

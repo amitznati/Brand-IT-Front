@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {Card, CardHeader, Menu, Grid, CardContent, MenuItem, Typography, IconButton} from '@material-ui/core';
+import {Card, CardHeader, Menu, CardMedia, MenuItem, Typography, IconButton} from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {Link} from 'react-router-dom';
 
@@ -11,7 +11,10 @@ const styles = {
 	},
 	media: {
 		// ⚠️ object-fit is not supported by IE 11.
-		objectFit: 'cover',
+		// objectFit: 'cover',
+		// maxHeight: '100%',
+		// maxWidth: '100%',
+		// padding: 8
 	},
 };
 
@@ -62,25 +65,17 @@ class CoreCard extends React.Component {
 						{title}
 					</Typography>}
 				/>
-				{/* <CardMedia
+				<CardMedia
 					component="img"
 					alt={title}
 					className={classes.media}
 					height="140"
 					image={image}
 					title={title}
-				/> */}
-				<CardContent>
-					<Grid
-						container
-						direction="row"
-						justify="center"
-						alignItems="center">
-						<Grid item xs={10} style={{textAlign: 'center'}}>
-							<img src={image} alt={title} style={{height: '100px'}}/>
-						</Grid>
-					</Grid>
-				</CardContent>
+				/>
+				{/* <CardContent>
+					<img src={image} alt={title} style={{maxHeight: '100%', maxWidth: '100%'}}/>
+				</CardContent> */}
 			</Card>
 		);
 	}

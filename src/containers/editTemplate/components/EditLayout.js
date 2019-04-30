@@ -71,6 +71,7 @@ class EditLayout extends React.Component {
 			<div>
 				{this.renderNumberField({type: 'number',name: 'height'})}
 				{this.renderNumberField({type: 'number',name: 'width'})}
+				{this.renderNumberField({type: 'number',name: 'rotation'})}
 			</div>
 		);
 	}

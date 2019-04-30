@@ -31,7 +31,7 @@ class Products extends React.Component {
 	}
 }
 Products.propTypes = {
-	classes: PropTypes.object.isRequired,
+	// classes: PropTypes.object.isRequired,
 	preFilters: PropTypes.array
 };
 

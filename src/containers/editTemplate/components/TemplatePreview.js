@@ -33,22 +33,46 @@ class TemplatePreview extends React.Component {
 	// 	this.renderText = this.renderText.bind(this);
 	// }
 
-	getPX(cm){
+	getPX = (cm) => {
 		const s = this.props.scale || 0.1;
 		return cm * s * (96 / 2.54);
 	}
+
+	getCM = (px) => {
+		const s = this.props.scale || 0.1;
+		return px / s / (96 / 2.54);
+	}
+
+	onUpdateNode = (node) => {
+		const {template = {}} = this.props;
+		const {layouts = []} = template;
+
+		const index = Number(node.attrs.name);
+		const layout = layouts[index];
+
+		layout.properties.x = this.getCM(node.attrs.x);
+		layout.properties.y = this.getCM(node.attrs.y);
+		layout.properties.height = this.getCM(node.attrs.height * node.attrs.scaleY);
+		layout.properties.width = this.getCM(node.attrs.width * node.attrs.scaleX);
+		layout.properties.rotation = node.attrs.rotation;
+
+		this.props.onUpdateLayout(layout);
+
+	};
 
 	renderImage(layout, index) {
 		const p = layout.properties;
 		return (
 			<URLImage
 				key={index}
-				x={p.x}
-				y={p.y}
+				x={this.getPX(p.x)}
+				y={this.getPX(p.y)}
 				height={this.getPX(p.height)}
 				width={this.getPX(p.width)}
+				rotation={p.rotation}
 				src={p.src}
-				name={`image-${index}`}
+				name={`${index}`}
+				onUpdateNode={this.onUpdateNode}
 			/>
 		);
 	}
@@ -90,7 +114,7 @@ class TemplatePreview extends React.Component {
 				<img className={classes.productImage} src={product.image} alt="product" style={{height: productH,width: productW}}/>
 				<div style={{height: templateH,width: templateW, position: 'absolute', overflow: 'hidden', bottom: templateY, left: templateX}}>
 					{/* {layouts.map((l,i) => this.renderLayout[l.type](l,i))} */}
-					<DesignCanvas>
+					<DesignCanvas onUpdateNode={this.onUpdateNode} onLayoutClick={this.props.onLayoutClick}>
 						{layouts.map((l,i) => this.renderLayout[l.type](l,i))}
 					</DesignCanvas>
 				</div>
@@ -104,7 +128,9 @@ TemplatePreview.propTypes = {
 	classes: PropTypes.object.isRequired,
 	template: PropTypes.object.isRequired,
 	scale: PropTypes.number,
-	product: PropTypes.object.isRequired
+	product: PropTypes.object.isRequired,
+	onUpdateLayout: PropTypes.func,
+	onLayoutClick: PropTypes.func
 };
 
 export default withStyles(styles)(TemplatePreview);
