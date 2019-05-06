@@ -114,7 +114,11 @@ class TemplatePreview extends React.Component {
 				<img className={classes.productImage} src={product.image} alt="product" style={{height: productH,width: productW}}/>
 				<div style={{height: templateH,width: templateW, position: 'absolute', overflow: 'hidden', bottom: templateY, left: templateX}}>
 					{/* {layouts.map((l,i) => this.renderLayout[l.type](l,i))} */}
-					<DesignCanvas onUpdateNode={this.onUpdateNode} onLayoutClick={this.props.onLayoutClick}>
+					<DesignCanvas
+						onUpdateNode={this.onUpdateNode}
+						onLayoutClick={this.props.onLayoutClick}
+						onEditLayoutEnd={this.props.onEditLayoutEnd}
+					>
 						{layouts.map((l,i) => this.renderLayout[l.type](l,i))}
 					</DesignCanvas>
 				</div>
@@ -130,7 +134,8 @@ TemplatePreview.propTypes = {
 	scale: PropTypes.number,
 	product: PropTypes.object.isRequired,
 	onUpdateLayout: PropTypes.func,
-	onLayoutClick: PropTypes.func
+	onLayoutClick: PropTypes.func,
+	onEditLayoutEnd: PropTypes.func
 };
 
 export default withStyles(styles)(TemplatePreview);

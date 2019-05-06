@@ -51,7 +51,8 @@ export default class DesignCanvas extends React.Component {
 	static propTypes = {
 		children: PropTypes.array,
 		onUpdateNode: PropTypes.func,
-		onLayoutClick: PropTypes.func
+		onLayoutClick: PropTypes.func,
+		onEditLayoutEnd: PropTypes.func
 	}
 	state = {
 		selectedShapeName: ''
@@ -59,6 +60,7 @@ export default class DesignCanvas extends React.Component {
 	handleStageMouseDown = e => {
 		// clicked on stage - cler selection
 		if (e.target === e.target.getStage()) {
+			this.props.onEditLayoutEnd();
 			this.setState({
 				selectedShapeName: ''
 			});
@@ -79,6 +81,7 @@ export default class DesignCanvas extends React.Component {
 			});
 			this.props.onLayoutClick(Number(name));
 		} else {
+			this.props.onEditLayoutEnd();
 			this.setState({
 				selectedShapeName: ''
 			});

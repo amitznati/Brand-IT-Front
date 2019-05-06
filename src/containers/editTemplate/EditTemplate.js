@@ -104,6 +104,10 @@ class EditTemplate extends React.Component {
 		mockService('templates','create',this.state.template);
 	}
 
+	onEditLayoutEnd = () => {
+		this.setState({selectedLayout: null});
+	}
+
 	render() {
 		const {classes} = this.props;
 		const {selectedLayout, template, scale, product} = this.state;
@@ -138,7 +142,7 @@ class EditTemplate extends React.Component {
 					/>}
 					{selectedLayout && <EditLayout 
 						layout={selectedLayout} 
-						onBack={() => this.setState({selectedLayout: null})}
+						onBack={this.onEditLayoutEnd}
 						onUpdate={this.onUpdateLayout.bind(this)}
 					/>}
 				</Grid>
@@ -157,6 +161,7 @@ class EditTemplate extends React.Component {
 							template={template}
 							onUpdateLayout={this.onUpdateLayout}
 							onLayoutClick={this.onLayoutClick}
+							onEditLayoutEnd={this.onEditLayoutEnd}
 						/>
 					</div>
 				</Grid>
