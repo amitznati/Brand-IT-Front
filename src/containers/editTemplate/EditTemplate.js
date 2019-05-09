@@ -12,11 +12,13 @@ import {mockService} from './../../mocks';
 import {CoreSlider} from './../../components/core';
 const {call,methods,apis} = mockService;
 const styles = theme => ({
-
+	section: {
+		padding: '20px 0'
+	},
 	templatePaper: {
 		position: 'relative',
 		overflow: 'auto',
-		padding: 0,
+		padding: '20px 0',
 		margin: 0
 	},
 	rootGrid: {
@@ -41,7 +43,10 @@ const layoutsTemplate = (type,payload) => {
 		return {
 			type: 'text',
 			properties: {
-				text: payload
+				text: payload,
+				x: 5, y: 5, scaleX: 1, scaleY: 1,
+				fontSize: 40, fontFamily: 'Myriad Hebrew', fontStyle: '',
+				rotation: 0
 			}
 		};
 	default:
@@ -59,6 +64,13 @@ class EditTemplate extends React.Component {
 		selectedLayoutIndex: -1,
 		scale: 0.5
 	};
+
+	componentDidMount() {
+		let {template} = this.state;
+
+		template.layouts.push(layoutsTemplate('text','what\'s up'));
+		this.setState({template});
+	}
 
 	onTemplateChanged(template) {
 		this.setState({template});
@@ -105,35 +117,34 @@ class EditTemplate extends React.Component {
 	}
 
 	onEditLayoutEnd = () => {
-		this.setState({selectedLayout: null});
+		this.setState({selectedLayout: null, selectedLayoutIndex: -1});
 	}
 
 	render() {
 		const {classes} = this.props;
-		const {selectedLayout, template, scale, product} = this.state;
+		const {selectedLayout, template, scale, product, selectedLayoutIndex} = this.state;
 		const {layouts = []} = template;
 		
 		return (
 			<Grid container className={classes.rootGrid}>
-				<Grid item xs={12}>
+				<AddLayoutDialog 
+					open={this.state.isAddOpen}
+					onClose={this.handleAddClose.bind(this)}
+				/>
+				<Grid item xs={12} className={classes.section}>
 					<Button variant="outlined" color="primary" onClick={this.saveTemplate}>
 						Save
 					</Button>
 				</Grid>
-				<Grid item xs={12}>
+				<Grid item xs={12} className={classes.section}>
 					<Paper>
-						<ProductProperties  product={product} onProductChanged={(p) => this.setState({product: p})}/>
+						<ProductProperties  product={undefined} onProductChanged={(p) => this.setState({product: p})}/>
 					</Paper>
-					
 				</Grid>
-				<Grid item md={3}>
+				<Grid item md={3} className={classes.section}>
 					<Button variant="outlined" color="primary" onClick={() => this.setState({isAddOpen: true})}>
 					+ Add Layout
 					</Button>
-					<AddLayoutDialog 
-						open={this.state.isAddOpen}
-						onClose={this.handleAddClose.bind(this)}
-					/>
 					{!selectedLayout && <LayoutsList 
 						onSortEnd={this.onSortEnd.bind(this)} 
 						layouts={layouts} 
@@ -146,7 +157,7 @@ class EditTemplate extends React.Component {
 						onUpdate={this.onUpdateLayout.bind(this)}
 					/>}
 				</Grid>
-				<Grid item md={9}>
+				{product && <Grid item md={9} className={classes.section}>
 					<CoreSlider
 						label="Scale"
 						value={scale}
@@ -162,9 +173,10 @@ class EditTemplate extends React.Component {
 							onUpdateLayout={this.onUpdateLayout}
 							onLayoutClick={this.onLayoutClick}
 							onEditLayoutEnd={this.onEditLayoutEnd}
+							selectedLayoutIndex={selectedLayoutIndex}
 						/>
 					</div>
-				</Grid>
+				</Grid>}
 			</Grid>
 		);
 	}

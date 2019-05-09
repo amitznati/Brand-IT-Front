@@ -52,18 +52,13 @@ export default class DesignCanvas extends React.Component {
 		children: PropTypes.array,
 		onUpdateNode: PropTypes.func,
 		onLayoutClick: PropTypes.func,
-		onEditLayoutEnd: PropTypes.func
+		onEditLayoutEnd: PropTypes.func,
+		selectedLayoutIndex: PropTypes.any
 	}
-	state = {
-		selectedShapeName: ''
-	};
 	handleStageMouseDown = e => {
 		// clicked on stage - cler selection
 		if (e.target === e.target.getStage()) {
 			this.props.onEditLayoutEnd();
-			this.setState({
-				selectedShapeName: ''
-			});
 			return;
 		}
 		// clicked on transformer - do nothing
@@ -76,15 +71,9 @@ export default class DesignCanvas extends React.Component {
 		// find clicked rect by its name
 		const name = e.target.name();
 		if (name) {
-			this.setState({
-				selectedShapeName: name
-			});
 			this.props.onLayoutClick(Number(name));
 		} else {
 			this.props.onEditLayoutEnd();
-			this.setState({
-				selectedShapeName: ''
-			});
 		}
 	};
 	render() {
@@ -97,7 +86,7 @@ export default class DesignCanvas extends React.Component {
 				<Layer>
 					{this.props.children}
 					<TransformerComponent
-						selectedShapeName={this.state.selectedShapeName}
+						selectedShapeName={`${this.props.selectedLayoutIndex}`}
 						onUpdateNode={this.props.onUpdateNode}
 					/>
 				</Layer>

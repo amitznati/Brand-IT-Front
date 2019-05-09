@@ -56,7 +56,6 @@ class EditKit extends React.Component {
 					direction="row"
 					justify="space-between"
 					alignItems="flex-end"
-					spacing={16}
 					className={classes.padding}
 				>
 					<Grid item md={3}>
@@ -71,10 +70,11 @@ class EditKit extends React.Component {
 							Save
 						</Button>
 					</Grid>
+					<Grid item xs={12}>
+						<Products />
+					</Grid>
 				</Grid>
-				<Grid container>
-					<Products />
-				</Grid>
+				
 			</div>
 		);
 	}

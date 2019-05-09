@@ -10,11 +10,8 @@ const styles = {
 		maxWidth: 345,
 	},
 	media: {
-		// ⚠️ object-fit is not supported by IE 11.
-		// objectFit: 'cover',
-		// maxHeight: '100%',
-		// maxWidth: '100%',
-		// padding: 8
+		margin: 'auto',
+		width: 'auto'
 	},
 };
 

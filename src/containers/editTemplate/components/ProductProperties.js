@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Grid} from '@material-ui/core';
+import {Grid, Button} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import {CoreText, CoreSlider} from '../../../components/core';
 import styles from '../../../styles/styles';
@@ -43,7 +43,19 @@ class TemplateProperties extends React.Component {
 		onProductChanged(product);
 	}
 
+	renderSelectProduct = () => {
+		return (
+			<Button variant="outlined" color="primary" >
+				Select Product
+			</Button>
+		);
+	}
+
 	render() {
+		const {product} = this.props;
+		if (!product) {
+			return this.renderSelectProduct();
+		}
 		const props = this.getViewProperties();
 		return (
 			<Grid container >
@@ -93,7 +105,7 @@ class TemplateProperties extends React.Component {
 
 TemplateProperties.propTypes = {
 	classes: PropTypes.object.isRequired,
-	product: PropTypes.object.isRequired,
+	product: PropTypes.object,
 	onProductChanged: PropTypes.func.isRequired
 };
 

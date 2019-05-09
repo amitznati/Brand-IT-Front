@@ -6,12 +6,12 @@ useStrictMode(true);
 export default class URLImage extends React.Component {
 	static propTypes = {
 		src: PropTypes.string,
-		x: PropTypes.number,
-		y: PropTypes.number,
-		width: PropTypes.number,
-		height: PropTypes.number,
-		rotation: PropTypes.number,
-		name: PropTypes.string,
+		// x: PropTypes.number,
+		// y: PropTypes.number,
+		// width: PropTypes.number,
+		// height: PropTypes.number,
+		// rotation: PropTypes.number,
+		// name: PropTypes.string,
 		onUpdateNode: PropTypes.func
 	}
 	state = {
@@ -47,18 +47,13 @@ export default class URLImage extends React.Component {
 	render() {
 		return (
 			<Image
-				x={this.props.x}
-				y={this.props.y}
-				width={this.props.width}
-				height={this.props.height}
+				{...this.props}
 				image={this.state.image}
-				rotation={this.props.rotation}
 				ref={node => {
 					this.imageNode = node;
 				}}
 				draggable
 				onDragEnd={() => this.props.onUpdateNode(this.imageNode)}
-				name={this.props.name}
 				scaleX={1}
 				scaleY={1}
 			/>

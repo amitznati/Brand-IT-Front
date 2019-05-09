@@ -9,7 +9,9 @@ const fields = {
 	text: [
 		{type: 'text', name: 'text'},
 		{type: 'position'},
-		{type: 'number', name: 'fontSize'}
+		{type: 'number', name: 'fontSize'},
+		{type: 'number', name: 'scaleX'},
+		{type: 'number', name: 'scaleY'}
 	],
 	image: [
 		{type: 'position'},
