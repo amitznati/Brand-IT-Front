@@ -5,6 +5,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import {Dialog, Paper,Grid, DialogTitle, DialogActions,DialogContent, Button, Toolbar, AppBar, Tabs, Tab, Typography, IconButton} from '@material-ui/core';
 import ThemeImagesList from '../../themes/components/ThemeImagesList';
 import {logos} from './../../../mocks';
+import { CoreText } from '../../../components/core';
 function TabContainer(props) {
 	return (
 		<Typography component="div" >
@@ -22,7 +23,13 @@ const types = [
 class AddLayoutDialog extends React.Component {
 	state = {
 		value: 0,
+		text: ''
 	};
+
+	onTextChanged = (text) => {
+		this.setState({text});
+	}
+
 	handleClose = () => {
 		this.props.onClose();
 	};
@@ -35,9 +42,13 @@ class AddLayoutDialog extends React.Component {
 		this.props.onClose(types[this.state.value],{url});
 	}
 
+	onTextSelect = () => {
+		this.props.onClose('text', this.state.text);
+	}
+
 	render() {
 		const {open, /* classes, onClose, selectedValue,*/ ...other, } = this.props;
-		const {value} = this.state;
+		const {value, text} = this.state;
 		return (
 			<Dialog 
 				onClose={this.handleClose}
@@ -78,7 +89,14 @@ class AddLayoutDialog extends React.Component {
 						
 					</TabContainer>}
 					{value === 1 && <TabContainer><ThemeImagesList isForSelect onSelect={this.onImageSelect.bind(this)}/></TabContainer>}
-					{value === 2 && <TabContainer>Text</TabContainer>}
+					{value === 2 && <TabContainer>
+						<CoreText label="text" handleTextChange={this.onTextChanged} value={text}/>
+						{/* <ButtonBase >ADD</ButtonBase> */}
+						<Button variant="outlined" color="primary" onClick={this.onTextSelect}>
+						ADD
+						</Button>
+					</TabContainer>
+					}
 					{value === 3 && <TabContainer>Shape</TabContainer>}
 				</DialogContent>
 				<DialogActions>

@@ -93,6 +93,7 @@ class TemplatePreview extends React.Component {
 				scaleX={p.scaleX}
 				scaleY={p.scaleY}
 				text={p.text}
+				{...p.fill}
 				rotation={p.rotation}
 				name={`${index}`}
 				onUpdateNode={this.onUpdateNode}

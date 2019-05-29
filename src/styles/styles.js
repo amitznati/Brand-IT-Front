@@ -36,7 +36,7 @@ const style = theme => ({
 		width: '90%',
 	},
 	slider: {
-		paddingTop: '31px'
+		paddingTop: '31.5px'
 	},
 	sliderContainer: {
 		bottom: 0,

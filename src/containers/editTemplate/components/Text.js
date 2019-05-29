@@ -23,6 +23,18 @@ export default class CanvasText extends React.Component {
 				}}
 				draggable
 				onDragEnd={() => this.props.onUpdateNode(this.textNode)}
+				// fill=""
+				// fillPriority="linear-gradient"
+				// fillLinearGradientEndPointX={-50}
+				// fillLinearGradientEndPointY={-50}
+				// fillLinearGradientStartPointX={50}
+				// fillLinearGradientStartPointY={50}
+				// fillLinearGradientColorStops={[
+				// 	0,
+				// 	'rgba(0,0,0,0.7)',
+				// 	1,
+				// 	'rgba(255,255,255,0.5)'
+				// ]}
 			/>
 		);
 	}
