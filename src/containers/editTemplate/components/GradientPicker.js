@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { SketchPicker } from 'react-color';
 import { Grid, ClickAwayListener } from '@material-ui/core';
+import {ToggleButton, ToggleButtonGroup}  from '@material-ui/lab';
 import GradientBuilder from './../../../components/core/GradientBuilder/GradientBuilder';
 import CoreNumber from '../../../components/core/CoreNumber';
 
@@ -77,7 +78,7 @@ class GradientPicker extends React.Component {
 
 	render() {
 		const {gradientData} = this.props;
-		const {palette, activeId, isActive} = gradientData;
+		const {palette, activeId, isActive, selectedGradientType} = gradientData;
 		return (
 			<div>
 				<ClickAwayListener onClickAway={() => this.onActiveColorChanged(false)}>
@@ -113,6 +114,24 @@ class GradientPicker extends React.Component {
 						})}
 					</Grid>
 				</ClickAwayListener>
+				<Grid container style={{margin: '15px 0'}}>
+					<Grid item>
+						<ToggleButtonGroup size="large" exclusive value={selectedGradientType} onChange={this.handleFillColorTypeChange}>
+							<ToggleButton value="Linear">
+							Linear
+								<i className="material-icons">
+								linear_scale
+								</i>
+							</ToggleButton>
+							<ToggleButton value="Radial">
+								Radial
+								<i className="material-icons">
+									all_out
+								</i>
+							</ToggleButton>
+						</ToggleButtonGroup>
+					</Grid>
+				</Grid>
 			</div>
 			
 		);
@@ -135,6 +154,7 @@ GradientPicker.defaultProps = {
 			{ pos: 1, color: '#028080' }
 		],
 		activeId: 1,
+		selectedGradientType: 'Linear',
 		isActive: false,
 		gradientPointsOnFocus: false
 	}
