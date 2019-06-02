@@ -218,7 +218,7 @@ class EditLayout extends React.Component {
 							</i>
 						</ToggleButton>
 						<ToggleButton value="Gradient">
-							<i className="material-icons">
+							<i className="material-icons" style={{transform: 'rotate(-90deg)'}}>
 								gradient
 							</i>
 						</ToggleButton>
