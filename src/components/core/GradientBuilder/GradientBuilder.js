@@ -6,9 +6,9 @@ import ColorPicker from './ColorPicker';
 
 const HALF_STOP_WIDTH = 5;
 
-const toState = (palette) => ({
+const toState = (palette, activeId) => ({
 	palette: palette.map((c, i) => ({	id: i + 1, ...c })),
-	activeId: 1,
+	activeId: activeId,
 	pointX: null
 });
 
@@ -21,7 +21,7 @@ const fromState = (palette) => {
 class GradientBuilder extends React.Component {
 	constructor (props) {
 		super(props);
-		this.state = { ...toState(props.palette) };
+		this.state = { ...toState(props.palette, props.activeId) };
 		this.handlePosChange = this.handlePosChange.bind(this);
 		this.handleAddColor = this.handleAddColor.bind(this);
 		this.handleActivate = this.handleActivate.bind(this);
@@ -110,12 +110,12 @@ class GradientBuilder extends React.Component {
 		this.notifyChange(palette);
 	}
 
-	componentWillReceiveProps ({ palette: next }) {
+	componentWillReceiveProps ({ palette: next, activeId }) {
 		const { palette: current } = this.props;
 		const length = Math.min(next.length, current.length);
 		for (let i = 0; i < length; i++) {
 			if (next[i].pos !== current[i].pos || next[i].color !== current[i].color) {
-				this.setState({ ...toState(next) });
+				this.setState({ ...toState(next, activeId) });
 				return;
 			}
 		}
@@ -154,7 +154,8 @@ GradientBuilder.propTypes = {
 		}).isRequired
 	),
 	onPaletteChange: PropTypes.func.isRequired,
-	onStepClick: PropTypes.func
+	onStepClick: PropTypes.func,
+	activeId: PropTypes.number
 };
 
 GradientBuilder.defaultProps = {
@@ -164,7 +165,8 @@ GradientBuilder.defaultProps = {
 	palette: [
 		{ pos: 0, color: '#9adafa' },
 		{ pos: 1, color: '#028080' }
-	]
+	],
+	activeId: 1
 };
 
 export default GradientBuilder;

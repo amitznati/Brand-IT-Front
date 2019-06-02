@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Fab, Paper, Grid, Button} from '@material-ui/core';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Grow from '@material-ui/core/Grow';
-import Popper from '@material-ui/core/Popper';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
+import {Fab, Paper, Grid, Button, Typography} from '@material-ui/core';
+import {ToggleButton, ToggleButtonGroup}  from '@material-ui/lab';
+// import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+// import Grow from '@material-ui/core/Grow';
+// import Popper from '@material-ui/core/Popper';
+// import MenuItem from '@material-ui/core/MenuItem';
+// import MenuList from '@material-ui/core/MenuList';
 import { withStyles } from '@material-ui/core/styles';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
 import CoreSlider from '../../../components/core/CoreSlider';
@@ -112,13 +113,41 @@ class EditLayout extends React.Component {
 			</div>
 		);
 	}
+	handleColorOpen = (e) => {
+		this.setState({colorPickerOpen: true, anchorEl: e.currentTarget});
+	};
+
+	handleColorClose = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		this.setState({colorPickerOpen: false, anchorEl: null});
+	};
+
+	handleFillColorChange = (color) => {
+		const {layout, onUpdate} = this.props;
+		layout.properties.fill = {
+			fill: color
+		};
+		onUpdate(layout);
+	};
 
 	renderFillField = () => {
-		// const {classes} = this.props;
+		const {layout} = this.props;
+		const color = layout.properties.fill && layout.properties.fill.fill;
 		return (
 			<Grid container justify="center">
-				<Grid item md={3}>
-					<CoreColorPicker />
+				<Grid item >
+					<Button size="large" onClick={this.handleColorOpen} style={{background: color}}>
+						fill color
+						{this.state.colorPickerOpen && 
+							<CoreColorPicker 
+								handleClose={this.handleColorClose}
+								onChange={this.handleFillColorChange}
+								color={color}
+							/>
+						}
+					</Button>
+					
 				</Grid>
 			</Grid>
 			
@@ -127,12 +156,16 @@ class EditLayout extends React.Component {
 
 	onGradientChange = (data) => {
 		const {layout, onUpdate} = this.props;
+		const {palette} = data;
 		const fillLinearGradientColorStops = [];
-		data.palette.map(p=>{
+		const layoutPalette = [];
+		palette.map(p=>{
 			fillLinearGradientColorStops.push(...[p.pos, p.color]);
+			layoutPalette.push({pos: Number(p.pos), color: p.color});
 			return false;
 		});
 		layout.properties.fill = {
+			gradientData: {...data, palette: layoutPalette},
 			fill: '',
 			fillPriority: 'linear-gradient',
 			fillLinearGradientEndPointX: data.EndX,
@@ -145,9 +178,12 @@ class EditLayout extends React.Component {
 	};
 
 	renderFillGradientField = () => {
+		const {layout} = this.props;
+		const {gradientData} = layout.properties.fill;
 		return (
 			<GradientPicker
 				onPaletteChange={this.onGradientChange}
+				gradientData={gradientData}
 			/>
 		);
 	}
@@ -156,50 +192,46 @@ class EditLayout extends React.Component {
 		Fill: this.renderFillField,
 		Gradient: this.renderFillGradientField
 	}
+	handleFillColorTypeChange = (event, selectedFillColor) => {
+		const {layout, onUpdate} = this.props;
+		if (selectedFillColor === 'Fill') {
+			layout.properties.fill.fill = 'black';
+		} else {
+			layout.properties.fill.fill = '';
+		}
+		onUpdate(layout);
+	};
 
 	renderFillColorField = () => {
-		const {open, selectedFillColor} = this.state;
+		const {layout: {properties: {fill}}} = this.props;
+		let selectedFillColorType = 'Fill';
+		if (!fill.fill) {
+			selectedFillColorType = 'Gradient';
+		}
 		return (
-			<Grid container justify="center" style={{textAlign: 'center'}}>
-				<Grid item md={8}>
-					<div>
-						<Button
-							buttonRef={node => {
-								this.anchorEl = node;
-							}}
-							aria-owns={open ? 'menu-list-grow' : undefined}
-							aria-haspopup="true"
-							onClick={this.handleToggle}
-						>
-							Toggle Menu Grow
-						</Button>
-						<Popper open={open} anchorEl={this.anchorEl} transition disablePortal>
-							{({ TransitionProps, placement }) => (
-								<Grow
-									{...TransitionProps}
-									id="menu-list-grow"
-									style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-								>
-									<Paper>
-										<ClickAwayListener onClickAway={this.handleClose}>
-											<MenuList>
-												<MenuItem onClick={(e) => this.handleClose(e,'Fill')}>Fill</MenuItem>
-												<MenuItem onClick={(e) => this.handleClose(e,'Gradient')}>Gradient</MenuItem>
-												<MenuItem onClick={(e) => this.handleClose(e,'Image')}>Image</MenuItem>
-											</MenuList>
-										</ClickAwayListener>
-									</Paper>
-								</Grow>
-							)}
-						</Popper>
-					</div>
+			<Grid container >
+				<Grid item xs={12} style={{margin: '15px'}}>
+					<Typography variant="h6" gutterBottom>
+						Fill Color
+					</Typography>
+				</Grid>
+				<Grid item style={{margin: '0 15px'}}>
+					<ToggleButtonGroup size="large" exclusive value={selectedFillColorType} onChange={this.handleFillColorTypeChange}>
+						<ToggleButton value="Fill">
+							<i className="material-icons">
+								format_color_fill
+							</i>
+						</ToggleButton>
+						<ToggleButton value="Gradient">
+							<i className="material-icons">
+								gradient
+							</i>
+						</ToggleButton>
+					</ToggleButtonGroup>
 				</Grid>
 
 				<Grid item md={12} style={{margin: '15px'}}>
-					{this.fillColorFields[selectedFillColor]()}
-				</Grid>
-				<Grid item md={3}>
-					somthing
+					{this.fillColorFields[selectedFillColorType]()}
 				</Grid>
 			</Grid>
 		);

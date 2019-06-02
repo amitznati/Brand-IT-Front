@@ -46,7 +46,8 @@ const layoutsTemplate = (type,payload) => {
 				text: payload,
 				x: 5, y: 5, scaleX: 1, scaleY: 1,
 				fontSize: 40, fontFamily: 'Myriad Hebrew', fontStyle: '',
-				rotation: 0
+				rotation: 0,
+				fill: {fill: 'black'}
 			}
 		};
 	default:

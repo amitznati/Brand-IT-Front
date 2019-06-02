@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Text, useStrictMode } from 'react-konva';
+import { Text, useStrictMode, Line } from 'react-konva';
 
 useStrictMode(true);
 export default class CanvasText extends React.Component {
@@ -14,28 +14,38 @@ export default class CanvasText extends React.Component {
 		// name: PropTypes.string,
 		onUpdateNode: PropTypes.func
 	}
-	render() {
+	renderLine = () => {
+		// eslint-disable-next-line react/prop-types
+		const {x, y, gradientData, name} = this.props;
+		const {StartX, StartY, EndX, EndY} = gradientData;
 		return (
-			<Text
+			<Line key={`line-${name}`}
+				x={x}
+				y={y}
+				points={[StartX, StartY, EndX, EndY]}
+				tension={0.5}
+				closed
+				stroke="black"
+			/>
+		);
+	};
+
+	render() {
+		const {gradientData} = this.props;
+		console.log(gradientData);
+		const shapes = [
+			<Text key={`text-${this.props.name}`}
 				{...this.props}
 				ref={node => {
 					this.textNode = node;
 				}}
 				draggable
 				onDragEnd={() => this.props.onUpdateNode(this.textNode)}
-				// fill=""
-				// fillPriority="linear-gradient"
-				// fillLinearGradientEndPointX={-50}
-				// fillLinearGradientEndPointY={-50}
-				// fillLinearGradientStartPointX={50}
-				// fillLinearGradientStartPointY={50}
-				// fillLinearGradientColorStops={[
-				// 	0,
-				// 	'rgba(0,0,0,0.7)',
-				// 	1,
-				// 	'rgba(255,255,255,0.5)'
-				// ]}
 			/>
-		);
+		];
+		if (gradientData && gradientData.gradientPointsOnFocus) {
+			shapes.push(this.renderLine());
+		}
+		return shapes;
 	}
 }

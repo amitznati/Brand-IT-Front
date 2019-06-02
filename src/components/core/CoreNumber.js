@@ -4,26 +4,27 @@ import {TextField, FormControl} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './../../styles/styles';
 
-const CoreText = props => {
-	const {value, handleTextChange, label, type = 'text'} = props;
+const CoreNumber = props => {
 	return (
 		<FormControl fullWidth >
 			<TextField
-				type={type}
-				label={label}
-				value={value}
-				onChange={(e) => handleTextChange(e.target.value)}
+				label={props.label}
+				value={props.value}
+				onFocus={props.onFocus}
+				type="number"
+				onChange={(e) => props.handleTextChange(Number(e.target.value))}
 			/>
 		</FormControl>
 	);
 };
 
-CoreText.propTypes = {
+CoreNumber.propTypes = {
 	classes: PropTypes.object.isRequired,
 	value: PropTypes.any.isRequired,
 	handleTextChange: PropTypes.func.isRequired,
 	label: PropTypes.string.isRequired,
-	type: PropTypes.string
+	type: PropTypes.string,
+	onFocus: PropTypes.func
 };
 
-export default withStyles(styles)(CoreText);
+export default withStyles(styles)(CoreNumber);

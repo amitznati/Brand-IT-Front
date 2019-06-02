@@ -1,8 +1,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ChromePicker } from 'react-color';
+import { SketchPicker } from 'react-color';
 import { useStrictMode } from 'react-konva';
+
+const getRgba = (rgba) => {
+	return `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`;
+};
 
 useStrictMode(true);
 class CoreColorPicker extends React.Component {
@@ -26,7 +30,7 @@ class CoreColorPicker extends React.Component {
 
 	handleChange = (color) => {
 		this.setState({ color: color.rgb });
-		this.props.onChange && this.props.onChange(color);
+		this.props.onChange && this.props.onChange(getRgba(color.rgb));
 	};
 
 	render() {
@@ -58,17 +62,11 @@ class CoreColorPicker extends React.Component {
 				left: '0px',
 			},
 		};
-
+		const {color, ...rest} = this.props;
 		return (
-			<div>
-				<div style={ styles.swatch } onClick={ this.handleClick }>
-					<div style={ styles.color } />
-				</div>
-				{ this.state.displayColorPicker ? <div style={ styles.popover }>
-					<div style={ styles.cover } onClick={ this.handleClose }/>
-					<ChromePicker  />
-				</div> : null }
-
+			<div style={ styles.popover }>
+				<div style={ styles.cover } onClick={ rest.handleClose }/>
+				<SketchPicker color={color || this.state.color} { ...rest } onChange={this.handleChange} />
 			</div>
 		);
 	}
@@ -76,6 +74,7 @@ class CoreColorPicker extends React.Component {
 
 CoreColorPicker.propTypes = {
 	onChange: PropTypes.func,
+	color: PropTypes.any
 };
 
 export default CoreColorPicker;
