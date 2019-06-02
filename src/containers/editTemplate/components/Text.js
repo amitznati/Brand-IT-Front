@@ -32,7 +32,6 @@ export default class CanvasText extends React.Component {
 
 	render() {
 		const {gradientData} = this.props;
-		console.log(gradientData);
 		const shapes = [
 			<Text key={`text-${this.props.name}`}
 				{...this.props}
