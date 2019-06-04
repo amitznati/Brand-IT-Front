@@ -48,47 +48,55 @@ class GradientPicker extends React.Component {
 	}
 
 
-	onPaletteChange = (palette) => {
-		const {onPaletteChange, gradientData} = this.props;
-		if (onPaletteChange) {
-			onPaletteChange({...gradientData, palette});
-		}
-	}
+	// onPaletteChange = (palette) => {
+	// 	const {onPaletteChange, gradientData} = this.props;
+	// 	if (onPaletteChange) {
+	// 		onPaletteChange({...gradientData, palette});
+	// 	}
+	// }
 
-	handlePointChange = (name, value) => {
+	handleChange = (newValues) => {
 		const {onPaletteChange, gradientData} = this.props;
 		if (onPaletteChange) {
-			onPaletteChange({...gradientData, [name]: value});
+			onPaletteChange({...gradientData, ...newValues});
 		}
 	};
 
-	onNumberFocus = (gradientPointsOnFocus) => {
-		const {onPaletteChange, gradientData} = this.props;
-		if (onPaletteChange) {
-			onPaletteChange({...gradientData, gradientPointsOnFocus});
-		}
-	};
+	// onNumberFocus = (gradientPointsOnFocus) => {
+	// 	const {onPaletteChange, gradientData} = this.props;
+	// 	if (onPaletteChange) {
+	// 		onPaletteChange({...gradientData, gradientPointsOnFocus});
+	// 	}
+	// };
 
-	onActiveColorChanged = (isActive, activeId) => {
-		const {onPaletteChange, gradientData} = this.props;
-		if (onPaletteChange) {
-			onPaletteChange({...gradientData, isActive, activeId});
-		}
-	}
+	// onActiveColorChanged = (isActive, activeId) => {
+	// 	const {onPaletteChange, gradientData} = this.props;
+	// 	if (onPaletteChange) {
+	// 		onPaletteChange({...gradientData, isActive, activeId});
+	// 	}
+	// }
+
+	// handleGradientTypeChange = (event, gradientType) => {
+	// 	const {onPaletteChange, gradientData} = this.props;
+	// 	if (onPaletteChange) {
+	// 		onPaletteChange({...gradientData, gradientType});
+	// 	}
+	// };
+
 
 	render() {
 		const {gradientData} = this.props;
-		const {palette, activeId, isActive, selectedGradientType} = gradientData;
+		const {palette, activeId, isActive, gradientType} = gradientData;
 		return (
 			<div>
-				<ClickAwayListener onClickAway={() => this.onActiveColorChanged(false)}>
+				<ClickAwayListener onClickAway={() => this.handleChange({isActive: false})}>
 					<GradientBuilder {...{
 						width: 320,
 						height: 32,
 						palette,
 						activeId,
-						onPaletteChange: this.onPaletteChange,
-						onStepClick: (activeId) => this.onActiveColorChanged(true, activeId)
+						onPaletteChange: (palette) => this.handleChange({palette}),
+						onStepClick: (activeId) => this.handleChange({isActive: true, activeId})
 					}}>
 						<WrappedSketchPicker {...{
 							width: 200,
@@ -97,7 +105,7 @@ class GradientPicker extends React.Component {
 						}} />
 					</GradientBuilder>
 				</ClickAwayListener>
-				<ClickAwayListener onClickAway={() => this.onNumberFocus(false)}>
+				<ClickAwayListener onClickAway={() => this.handleChange({gradientPointsOnFocus: false})}>
 					<Grid container>
 						{['StartX', 'StartY', 'EndX', 'EndY'].map(name => {
 							return (
@@ -106,8 +114,8 @@ class GradientPicker extends React.Component {
 										type="number" 
 										label={name} 
 										value={gradientData[name]} 
-										handleTextChange={(v) => this.handlePointChange(name, v)}
-										onFocus={() => this.onNumberFocus(true)}
+										handleTextChange={(v) => this.handleChange({[name]: v})}
+										onFocus={() => this.handleChange({gradientPointsOnFocus: true})}
 									/>
 								</Grid>
 							);
@@ -116,7 +124,10 @@ class GradientPicker extends React.Component {
 				</ClickAwayListener>
 				<Grid container style={{margin: '15px 0'}}>
 					<Grid item>
-						<ToggleButtonGroup size="large" exclusive value={selectedGradientType} onChange={this.handleFillColorTypeChange}>
+						<ToggleButtonGroup size="large"
+							exclusive
+							value={gradientType}
+							onChange={(event, gradientType) =>this.handleChange({gradientType})}>
 							<ToggleButton value="Linear">
 							Linear
 								<i className="material-icons">
@@ -132,6 +143,20 @@ class GradientPicker extends React.Component {
 						</ToggleButtonGroup>
 					</Grid>
 				</Grid>
+				{gradientType === 'Radial' && <Grid container>
+					{['StartRadius', 'EndRadius'].map(name => {
+						return (
+							<Grid item md={3} key={name}>
+								<CoreNumber
+									type="number"
+									label={name}
+									value={gradientData[name]}
+									handleTextChange={(v) => this.handleChange({[name]: v < 0 ? 0 : v})}
+								/>
+							</Grid>
+						);
+					})}
+				</Grid>}
 			</div>
 			
 		);
@@ -145,6 +170,7 @@ GradientPicker.propTypes = {
 
 GradientPicker.defaultProps = {
 	gradientData: {
+		gradientType: 'Linear',
 		StartX: 0,
 		StartY: 5,
 		EndX: 50,
@@ -156,7 +182,9 @@ GradientPicker.defaultProps = {
 		activeId: 1,
 		selectedGradientType: 'Linear',
 		isActive: false,
-		gradientPointsOnFocus: false
+		gradientPointsOnFocus: false,
+		StartRadius: 0,
+		EndRadius: 70
 	}
 };
 

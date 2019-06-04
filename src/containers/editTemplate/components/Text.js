@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Text, useStrictMode, Line } from 'react-konva';
+import { Text, useStrictMode, Line, Circle } from 'react-konva';
 
 useStrictMode(true);
 export default class CanvasText extends React.Component {
@@ -19,14 +19,20 @@ export default class CanvasText extends React.Component {
 		const {x, y, gradientData, name} = this.props;
 		const {StartX, StartY, EndX, EndY} = gradientData;
 		return (
-			<Line key={`line-${name}`}
+			[<Line key={`line-${name}`}
 				x={x}
 				y={y}
 				points={[StartX, StartY, EndX, EndY]}
-				tension={0.5}
-				closed
 				stroke="black"
+			/>,
+			<Circle
+				key={`circle-${name}`}
+				x={(x + EndX)}
+				y={(y + EndY)}
+				radius={5}
+				fill='black'
 			/>
+			]
 		);
 	};
 
@@ -43,7 +49,7 @@ export default class CanvasText extends React.Component {
 			/>
 		];
 		if (gradientData && gradientData.gradientPointsOnFocus) {
-			shapes.push(this.renderLine());
+			shapes.push(...this.renderLine());
 		}
 		return shapes;
 	}

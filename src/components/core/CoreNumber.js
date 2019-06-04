@@ -5,12 +5,12 @@ import { withStyles } from '@material-ui/core/styles';
 import styles from './../../styles/styles';
 
 const CoreNumber = props => {
+	// eslint-disable-next-line no-unused-vars
+	const {classes, handleTextChange, ...rest} = props;
 	return (
 		<FormControl fullWidth >
 			<TextField
-				label={props.label}
-				value={props.value}
-				onFocus={props.onFocus}
+				{...rest}
 				type="number"
 				onChange={(e) => props.handleTextChange(Number(e.target.value))}
 			/>

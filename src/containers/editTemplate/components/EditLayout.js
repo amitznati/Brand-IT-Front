@@ -151,11 +151,11 @@ class EditLayout extends React.Component {
 
 	onGradientChange = (data) => {
 		const {layout, onUpdate} = this.props;
-		const {palette} = data;
-		const fillLinearGradientColorStops = [];
+		const {palette, EndX, EndY, StartX, StartY} = data;
+		const stops = [];
 		const layoutPalette = [];
-		palette.map(p=>{
-			fillLinearGradientColorStops.push(...[p.pos, p.color]);
+		palette.map(p => {
+			stops.push(...[p.pos, p.color]);
 			layoutPalette.push({pos: Number(p.pos), color: p.color});
 			return false;
 		});
@@ -163,11 +163,11 @@ class EditLayout extends React.Component {
 			gradientData: {...data, palette: layoutPalette},
 			fill: '',
 			fillPriority: 'linear-gradient',
-			fillLinearGradientEndPointX: data.EndX,
-			fillLinearGradientEndPointY: data.EndY,
-			fillLinearGradientStartPointX: data.StartX,
-			fillLinearGradientStartPointY: data.StartY,
-			fillLinearGradientColorStops
+			[`fill${data.gradientType}GradientEndPoint`]: {x: EndX, y: EndY},
+			[`fill${data.gradientType}GradientStartPoint`]: {x: StartX, y: StartY},
+			[`fill${data.gradientType}GradientColorStops`]: stops,
+			fillRadialGradientEndRadius: data.EndRadius,
+			fillRadialGradientStartRadius: data.StartRadius,
 		};
 		onUpdate(layout);
 	};
