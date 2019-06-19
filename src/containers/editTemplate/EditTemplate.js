@@ -10,6 +10,10 @@ import TemplatePreview from './components/TemplatePreview';
 import ProductProperties from './components/ProductProperties';
 import {mockService} from './../../mocks';
 import {CoreSlider} from './../../components/core';
+import FontLoader from '../../utils/fontLoader';
+import SVGPathBuilder from '../../components/core/SVGPathBuilder';
+import {getPX} from './utils';
+
 const {call,methods,apis} = mockService;
 const styles = theme => ({
 	section: {
@@ -45,9 +49,20 @@ const layoutsTemplate = (type,payload) => {
 			properties: {
 				text: payload,
 				x: 5, y: 5, scaleX: 1, scaleY: 1,
-				fontSize: 40, fontFamily: 'Myriad Hebrew', fontStyle: '',
+				fontSize: 40, fontFamily: 'Raleway', fontStyle: '100',
 				rotation: 0,
 				fill: {fill: 'black'}
+			}
+		};
+	case 'textPath': 
+		return {
+			type: 'textPath',
+			properties: {
+				text: payload,
+				x: 5, y: 5, scaleX: 1, scaleY: 1,
+				fontSize: 40, fontFamily: 'Raleway', fontStyle: '100',
+				rotation: 0,
+				fill: {fill: 'black'},
 			}
 		};
 	default:
@@ -63,14 +78,17 @@ class EditTemplate extends React.Component {
 		selectedLayout: null,
 		isAddOpen: false,
 		selectedLayoutIndex: -1,
-		scale: 0.5
+		scale: 0.5,
+		allFontsLoaded: false,
+		isSVGPathBuilderOpen: false
 	};
 
 	componentDidMount() {
 		let {template} = this.state;
 
-		template.layouts.push(layoutsTemplate('text','what\'s up'));
+		template.layouts.push(layoutsTemplate('textPath','what\'s up'));
 		this.setState({template});
+		
 	}
 
 	onTemplateChanged(template) {
@@ -118,13 +136,70 @@ class EditTemplate extends React.Component {
 	}
 
 	onEditLayoutEnd = () => {
-		this.setState({selectedLayout: null, selectedLayoutIndex: -1});
+		this.setState({selectedLayout: null, selectedLayoutIndex: -1, isSVGPathBuilderOpen: false});
 	}
+
+	getAllFonts = () => {
+		const {template} = this.state;
+		const {layouts = []} = template;
+		const allFonts = [];
+		layouts.map(l => {
+			const {fontFamily, fontStyle} = l.properties;
+			if (l.type === 'text' || l.type === 'textPath') {
+				allFonts.push(`${fontFamily}:${(fontStyle && fontStyle.replace(' ',',')) || 300}`);
+			}
+			return false;
+		});
+		return allFonts;
+	};
+
+
+	onPathChange = (pathData) => {
+		let {template, selectedLayoutIndex} = this.state;
+		if (pathData.initiate) {
+			template.layouts[selectedLayoutIndex].properties.x = 0;
+			template.layouts[selectedLayoutIndex].properties.y = 0;
+		}
+		template.layouts[selectedLayoutIndex].properties.pathData = pathData;
+		template.layouts[selectedLayoutIndex].properties.pathData.initiate = false;
+		this.setState({template});
+	};
+
+	onTogglePathBuilder = () => {
+		this.setState(s => {return {isSVGPathBuilderOpen: !s.isSVGPathBuilderOpen};});
+	};
+
+	getInitialPathPoints = () => {
+		const {template, selectedLayoutIndex, scale} = this.state;
+		const layout = template.layouts[selectedLayoutIndex];
+		const {x, y} = layout.properties;
+		const pxX = getPX(x, scale);
+		const pxY = getPX(y, scale);
+		return [
+			{x: pxX, y: pxY}, {x: pxX + 100, y: pxY}
+		];
+	};
+
+	renderPathBuilder = () => {
+		const {selectedLayout} = this.state;
+		const pathData = selectedLayout && selectedLayout.properties.pathData;
+		const pathPoints = pathData && pathData.points ? pathData.points : this.getInitialPathPoints();
+		return (
+			<SVGPathBuilder
+				onChange={this.onPathChange}
+				pathData={pathData}
+				initialClosePath={false}
+				initialPoints={pathPoints}
+				layout={selectedLayout}
+			/>
+		);
+	};
 
 	render() {
 		const {classes} = this.props;
-		const {selectedLayout, template, scale, product, selectedLayoutIndex} = this.state;
+		const {selectedLayout, template, scale, product, selectedLayoutIndex, allFontsLoaded, isSVGPathBuilderOpen} = this.state;
 		const {layouts = []} = template;
+		const allFonts = this.getAllFonts();
 		
 		return (
 			<Grid container className={classes.rootGrid}>
@@ -156,6 +231,7 @@ class EditTemplate extends React.Component {
 						layout={selectedLayout} 
 						onBack={this.onEditLayoutEnd}
 						onUpdate={this.onUpdateLayout.bind(this)}
+						onTogglePathBuilder={this.onTogglePathBuilder.bind(this)}
 					/>}
 				</Grid>
 				{product && <Grid item md={9} className={classes.section}>
@@ -167,7 +243,7 @@ class EditTemplate extends React.Component {
 						handleSliderChange={(v)=>this.setState({scale: Number(v)})}
 					/>
 					<div className={classes.templatePaper}>
-						<TemplatePreview 
+						{allFontsLoaded && <TemplatePreview 
 							scale={scale} 
 							product={product} 
 							template={template}
@@ -175,9 +251,15 @@ class EditTemplate extends React.Component {
 							onLayoutClick={this.onLayoutClick}
 							onEditLayoutEnd={this.onEditLayoutEnd}
 							selectedLayoutIndex={selectedLayoutIndex}
-						/>
+						/>}
+						{allFonts && allFonts.length && <FontLoader
+							fontProvider="google"
+							fontFamilies={allFonts}
+							onActive={() => this.setState({allFontsLoaded: true})}
+						/>}
 					</div>
 				</Grid>}
+				{isSVGPathBuilderOpen && this.renderPathBuilder()}
 			</Grid>
 		);
 	}

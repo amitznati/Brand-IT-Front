@@ -16,7 +16,6 @@ const styles = theme => ({
 		margin: theme.spacing.unit,
 		marginLeft: 0,
 		padding: theme.spacing.unit,
-
 	},
 	layoutGrid: {
 		height: '50px'
@@ -34,6 +33,7 @@ class LayoutsList extends React.Component {
 		case 'image':
 			return <ImageLayoutHeader key={i} layout={l}/>;
 		case 'text':
+		case 'textPath':
 			return <TextLayoutHeader key={i} layout={l}/>;
 		default:
 			return '';

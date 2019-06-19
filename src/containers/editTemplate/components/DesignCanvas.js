@@ -53,7 +53,9 @@ export default class DesignCanvas extends React.Component {
 		onUpdateNode: PropTypes.func,
 		onLayoutClick: PropTypes.func,
 		onEditLayoutEnd: PropTypes.func,
-		selectedLayoutIndex: PropTypes.any
+		selectedLayoutIndex: PropTypes.any,
+		h: PropTypes.number,
+		w: PropTypes.number
 	}
 	handleStageMouseDown = e => {
 		// clicked on stage - cler selection
@@ -79,8 +81,8 @@ export default class DesignCanvas extends React.Component {
 	render() {
 		return (
 			<Stage
-				width={window.innerWidth}
-				height={window.innerHeight}
+				width={this.props.w}
+				height={this.props.h}
 				onMouseDown={this.handleStageMouseDown}
 			>
 				<Layer>

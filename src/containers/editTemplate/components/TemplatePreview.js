@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import DesignCanvas from './DesignCanvas';
-import URLImage from './URLImage';
-import Text from './Text';
+import URLImage from './Layouts/URLImage';
+import Text from './Layouts/Text';
+import TextPath from './Layouts/TextPath';
 
 const styles = theme => ({
 	templateRoot: {
@@ -52,8 +53,8 @@ class TemplatePreview extends React.Component {
 		if(layout.type === 'image') {
 			layout.properties.height = this.getCM(node.attrs.height * node.attrs.scaleY);
 			layout.properties.width = this.getCM(node.attrs.width * node.attrs.scaleX);
-		} else if (layout.type === 'text') {
-			layout.properties.scaleX =  node.attrs.scaleX;
+		} else if (layout.type === 'text' || layout.type === 'textPath') {
+			layout.properties.scaleX = node.attrs.scaleX;
 			layout.properties.scaleY = node.attrs.scaleY;
 		}
 
@@ -62,6 +63,13 @@ class TemplatePreview extends React.Component {
 		layout.properties.y = this.getCM(node.attrs.y);
 		this.props.onUpdateLayout(layout);
 	}
+
+	onPathChange = (pathData, node) => {
+		const layout = this.getLayout(node);
+		const {onUpdateLayout} = this.props;
+		layout.properties.pathData = pathData;
+		onUpdateLayout(layout);
+	};
 
 	renderImage(layout, index) {
 		const p = layout.properties;
@@ -101,8 +109,34 @@ class TemplatePreview extends React.Component {
 		);
 	}
 
+	renderTextPath(layout, index) {
+		const p = layout.properties;
+		// const {template = {}} = this.props;
+		const {scale = 1} = this.props;
+		return (
+			<TextPath 
+				key={index} 
+				fontFamily={p.fontFamily}
+				fontSize={(scale * p.fontSize)}
+				fontStyle={p.fontStyle}
+				x={this.getPX(p.x)}
+				y={this.getPX(p.y)}
+				scaleX={p.scaleX}
+				scaleY={p.scaleY}
+				text={p.text}
+				{...p.fill}
+				pathData={p.pathData}
+				rotation={p.rotation}
+				name={`${index}`}
+				onUpdateNode={this.onUpdateNode}
+				onPathChange={this.onPathChange}
+			/>
+		);
+	}
+
 	renderLayout = {
 		text: this.renderText.bind(this),
+		textPath: this.renderTextPath.bind(this),
 		image: this.renderImage.bind(this),
 	};
 
@@ -119,13 +153,15 @@ class TemplatePreview extends React.Component {
 		return (
 			<div style={{height: productH,width: productW, position: 'relative'}}>
 				<img className={classes.productImage} src={product.image} alt="product" style={{height: productH,width: productW}}/>
-				<div style={{height: templateH,width: templateW, position: 'absolute', overflow: 'hidden', bottom: templateY, left: templateX}}>
+				<div id="templateDiv" style={{height: templateH,width: templateW, position: 'absolute', overflow: 'hidden', bottom: templateY, left: templateX}}>
 					{/* {layouts.map((l,i) => this.renderLayout[l.type](l,i))} */}
 					<DesignCanvas
 						onUpdateNode={this.onUpdateNode}
 						onLayoutClick={this.props.onLayoutClick}
 						onEditLayoutEnd={this.props.onEditLayoutEnd}
 						selectedLayoutIndex={this.props.selectedLayoutIndex}
+						h={templateH}
+						w={templateW}
 					>
 						{layouts.map((l,i) => this.renderLayout[l.type](l,i))}
 					</DesignCanvas>

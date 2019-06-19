@@ -8,22 +8,31 @@ import CoreSlider from '../../../components/core/CoreSlider';
 import CoreText from '../../../components/core/CoreText';
 import CoreColorPicker from '../../../components/core/CoreColorPicker';
 import GradientPicker from './GradientPicker';
+import CoreFontSelector from '../../../components/core/CoreFontSelector';
+import { CoreAutocomplete } from '../../../components/core';
+import SVGPathSelector from './SVGPathSelector';
 
 const fields = {
 	text: [
 		{type: 'text', name: 'text'},
+		{type: 'font'},
+		{type: 'fontStyle'},
 		{type: 'position'},
 		{type: 'number', name: 'fontSize'},
 		{type: 'number', name: 'scaleX'},
 		{type: 'number', name: 'scaleY'},
 		{type: 'fillColor'}
+		
 	],
 	image: [
 		{type: 'position'},
 		{type: 'size'}
 	],
 };
-
+fields.textPath = [
+	...fields.text,
+	{type: 'pathSelector'}
+];
 const styles = theme => ({
 	paper: {
 		margin: theme.spacing.unit,
@@ -232,6 +241,35 @@ class EditLayout extends React.Component {
 		);
 	}
 
+	renderFontSelector = () => {
+		return <CoreFontSelector />;
+	};
+
+	renderFontStyle = () => {
+		const options = ['100', '200', '300', 'bold'].map(v => {
+			return {label: v, value: v};
+		});
+		return (
+			<div style={{margin: 8}}>
+				<CoreAutocomplete
+					options={options}
+					label="Font Style"
+				/>
+			</div>
+		);
+	};
+
+
+	renderPathSelector = () => {
+		const {onTogglePathBuilder, layout} = this.props;
+		return (
+			<SVGPathSelector 
+				toggleOpen={onTogglePathBuilder}
+				path={layout.properties.pathData && layout.properties.pathData.path}
+			/>
+		); 
+	};
+
 	renderFields(field) {
 		let renderedField = <div></div>;
 		switch(field.type){
@@ -249,6 +287,15 @@ class EditLayout extends React.Component {
 			break;
 		case 'fillColor':
 			renderedField = this.renderFillColorField();
+			break;
+		case 'font':
+			renderedField = this.renderFontSelector();
+			break;
+		case 'fontStyle':
+			renderedField = this.renderFontStyle();
+			break;
+		case 'pathSelector':
+			renderedField = this.renderPathSelector();
 			break;
 		default:
 			renderedField = <div></div>;
@@ -278,7 +325,8 @@ EditLayout.propTypes = {
 	classes: PropTypes.object.isRequired,
 	layout: PropTypes.object.isRequired,
 	onBack: PropTypes.func.isRequired,
-	onUpdate: PropTypes.func.isRequired
+	onUpdate: PropTypes.func.isRequired,
+	onTogglePathBuilder: PropTypes.func
 };
 
 export default withStyles(styles)(EditLayout);

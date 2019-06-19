@@ -5,13 +5,6 @@ import { Text, useStrictMode, Line, Circle } from 'react-konva';
 useStrictMode(true);
 export default class CanvasText extends React.Component {
 	static propTypes = {
-		// text: PropTypes.string,
-		// x: PropTypes.number,
-		// y: PropTypes.number,
-		// fontSize: PropTypes.number,
-		// fontFamily: PropTypes.string,
-		// rotation: PropTypes.number,
-		// name: PropTypes.string,
 		onUpdateNode: PropTypes.func
 	}
 	renderLine = () => {
