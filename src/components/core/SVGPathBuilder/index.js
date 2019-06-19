@@ -78,21 +78,6 @@ class SVGPathBuilder extends Component {
 		this.handleChange({points, path, w, h});
 	}
 
-	componentDidUpdate(prevProps) {
-		console.log({prevProps});
-		console.log(this.props);
-		// if (this.props.layout.properties.scaleX !== prevProps.layout.properties.scaleX ||
-		// 	this.props.layout.properties.scaleY !== prevProps.layout.properties.scaleY) {
-			const {clientWidth, clientHeight} = document.getElementById('templateDiv');
-			const w = this.props.layout.properties.scaleX * clientWidth;
-			const h = this.props.layout.properties.scaleY * clientHeight;
-			//this.handleChange({w, h});
-			console.log({w, h});
-			//console.log(this.props);
-			
-		//}
-	}
-
 	componentWillUnmount() {
 		document.removeEventListener('keydown', this.handleKeyDown, false);
 		document.removeEventListener('keyup', this.handleKeyUp, false);
