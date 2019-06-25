@@ -55,7 +55,8 @@ export default class DesignCanvas extends React.Component {
 		onEditLayoutEnd: PropTypes.func,
 		selectedLayoutIndex: PropTypes.any,
 		h: PropTypes.number,
-		w: PropTypes.number
+		w: PropTypes.number,
+		scale: PropTypes.number
 	}
 	handleStageMouseDown = e => {
 		// clicked on stage - cler selection
@@ -84,6 +85,8 @@ export default class DesignCanvas extends React.Component {
 				width={this.props.w}
 				height={this.props.h}
 				onMouseDown={this.handleStageMouseDown}
+				scaleX={this.props.scale}
+				scaleY={this.props.scale}
 			>
 				<Layer>
 					{this.props.children}

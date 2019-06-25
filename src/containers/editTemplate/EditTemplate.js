@@ -78,7 +78,7 @@ class EditTemplate extends React.Component {
 		selectedLayout: null,
 		isAddOpen: false,
 		selectedLayoutIndex: -1,
-		scale: 0.5,
+		scale: 0.8,
 		allFontsLoaded: false,
 		isSVGPathBuilderOpen: false
 	};
@@ -156,41 +156,42 @@ class EditTemplate extends React.Component {
 
 	onPathChange = (pathData) => {
 		let {template, selectedLayoutIndex} = this.state;
-		if (pathData.initiate) {
-			template.layouts[selectedLayoutIndex].properties.x = 0;
-			template.layouts[selectedLayoutIndex].properties.y = 0;
-		}
 		template.layouts[selectedLayoutIndex].properties.pathData = pathData;
-		template.layouts[selectedLayoutIndex].properties.pathData.initiate = false;
 		this.setState({template});
 	};
-
-	onTogglePathBuilder = () => {
-		this.setState(s => {return {isSVGPathBuilderOpen: !s.isSVGPathBuilderOpen};});
-	};
-
-	getInitialPathPoints = () => {
-		const {template, selectedLayoutIndex, scale} = this.state;
-		const layout = template.layouts[selectedLayoutIndex];
-		const {x, y} = layout.properties;
-		const pxX = getPX(x, scale);
-		const pxY = getPX(y, scale);
-		return [
-			{x: pxX, y: pxY}, {x: pxX + 100, y: pxY}
+	getInitiatePathData = () => {
+		const points = [
+			{x: 0, y: 0}, {x: 0 + 100, y: 0}
 		];
+		return {
+			points
+		};
+	}
+	onTogglePathBuilder = () => {
+		const {isSVGPathBuilderOpen, template, selectedLayoutIndex} = this.state;
+		template.layouts[selectedLayoutIndex].properties.rotation = 0;
+		this.setState({isSVGPathBuilderOpen: !isSVGPathBuilderOpen, template});
 	};
 
 	renderPathBuilder = () => {
-		const {selectedLayout} = this.state;
+		const {selectedLayout, product, scale} = this.state;
 		const pathData = selectedLayout && selectedLayout.properties.pathData;
-		const pathPoints = pathData && pathData.points ? pathData.points : this.getInitialPathPoints();
+		let initialPoints = [
+			{x: 0, y: 0}, {x: 0 + 100, y: 0}
+		];
+		if (pathData && pathData.points) {
+			initialPoints = pathData.points;
+		}
+		const w = getPX(product.templateFrame.width, scale);
+		const h = getPX(product.templateFrame.height, scale);
 		return (
 			<SVGPathBuilder
 				onChange={this.onPathChange}
-				pathData={pathData}
-				initialClosePath={false}
-				initialPoints={pathPoints}
+				{...{w, h}}
 				layout={selectedLayout}
+				initialPoints={initialPoints}
+				gridSize={product.templateFrame.width}
+				scale={scale}
 			/>
 		);
 	};
@@ -240,7 +241,7 @@ class EditTemplate extends React.Component {
 						value={scale}
 						max={3}
 						step={0.001}
-						handleSliderChange={(v)=>this.setState({scale: Number(v)})}
+						handleSliderChange={(v)=>this.setState({scale: Number(Number(v).toFixed(2))})}
 					/>
 					<div className={classes.templatePaper}>
 						{allFontsLoaded && <TemplatePreview 

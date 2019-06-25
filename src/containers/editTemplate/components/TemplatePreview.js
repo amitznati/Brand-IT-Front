@@ -5,7 +5,7 @@ import DesignCanvas from './DesignCanvas';
 import URLImage from './Layouts/URLImage';
 import Text from './Layouts/Text';
 import TextPath from './Layouts/TextPath';
-
+import {getPX, getCM} from './../utils';
 const styles = theme => ({
 	templateRoot: {
 		//background: 'white',
@@ -50,17 +50,11 @@ class TemplatePreview extends React.Component {
 
 	onUpdateNode = (node) => {
 		const layout = this.getLayout(node);
-		if(layout.type === 'image') {
-			layout.properties.height = this.getCM(node.attrs.height * node.attrs.scaleY);
-			layout.properties.width = this.getCM(node.attrs.width * node.attrs.scaleX);
-		} else if (layout.type === 'text' || layout.type === 'textPath') {
-			layout.properties.scaleX = node.attrs.scaleX;
-			layout.properties.scaleY = node.attrs.scaleY;
-		}
-
+		layout.properties.scaleX = node.attrs.scaleX;
+		layout.properties.scaleY = node.attrs.scaleY;
 		layout.properties.rotation = node.attrs.rotation;
-		layout.properties.x = this.getCM(node.attrs.x);
-		layout.properties.y = this.getCM(node.attrs.y);
+		layout.properties.x = getCM(node.attrs.x);
+		layout.properties.y = getCM(node.attrs.y);
 		this.props.onUpdateLayout(layout);
 	}
 
@@ -89,15 +83,14 @@ class TemplatePreview extends React.Component {
 	}
 	renderText(layout, index) {
 		const p = layout.properties;
-		const {scale = 1} = this.props;
 		return (
 			<Text 
 				key={index} 
 				fontFamily={p.fontFamily}
-				fontSize={(scale * p.fontSize)}
+				fontSize={(p.fontSize)}
 				fontStyle={p.fontStyle}
-				x={this.getPX(p.x)}
-				y={this.getPX(p.y)}
+				x={getPX(p.x)}
+				y={getPX(p.y)}
 				scaleX={p.scaleX}
 				scaleY={p.scaleY}
 				text={p.text}
@@ -111,16 +104,14 @@ class TemplatePreview extends React.Component {
 
 	renderTextPath(layout, index) {
 		const p = layout.properties;
-		// const {template = {}} = this.props;
-		const {scale = 1} = this.props;
 		return (
 			<TextPath 
 				key={index} 
 				fontFamily={p.fontFamily}
-				fontSize={(scale * p.fontSize)}
+				fontSize={(p.fontSize)}
 				fontStyle={p.fontStyle}
-				x={this.getPX(p.x)}
-				y={this.getPX(p.y)}
+				x={getPX(p.x)}
+				y={getPX(p.y)}
 				scaleX={p.scaleX}
 				scaleY={p.scaleY}
 				text={p.text}
@@ -141,15 +132,15 @@ class TemplatePreview extends React.Component {
 	};
 
 	render() {
-		const {template = {}} = this.props;
+		const {template = {}, scale} = this.props;
 		const {layouts = []} = template;
 		const {product, classes } = this.props;
-		const productH = this.getPX(product.productSize.height);
-		const productW = this.getPX(product.productSize.width);
-		const templateH = this.getPX(product.templateFrame.height);
-		const templateW = this.getPX(product.templateFrame.width);
-		const templateX = this.getPX(product.templateFrame.x);
-		const templateY = this.getPX(product.templateFrame.y);
+		const productH = getPX(product.productSize.height, scale);
+		const productW = getPX(product.productSize.width, scale);
+		const templateH = getPX(product.templateFrame.height, scale);
+		const templateW = getPX(product.templateFrame.width, scale);
+		const templateX = getPX(product.templateFrame.x, scale);
+		const templateY = getPX(product.templateFrame.y, scale);
 		return (
 			<div style={{height: productH,width: productW, position: 'relative'}}>
 				<img className={classes.productImage} src={product.image} alt="product" style={{height: productH,width: productW}}/>
@@ -162,6 +153,7 @@ class TemplatePreview extends React.Component {
 						selectedLayoutIndex={this.props.selectedLayoutIndex}
 						h={templateH}
 						w={templateW}
+						scale={scale}
 					>
 						{layouts.map((l,i) => this.renderLayout[l.type](l,i))}
 					</DesignCanvas>

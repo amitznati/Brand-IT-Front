@@ -5,7 +5,7 @@ import Grid from './Grid';
 import Point from './Point';
 import Cubic from './Cubic';
 import Quadratic from './Quadratic';
-
+import {getPX} from '../../../../containers/editTemplate/utils';
 // import './styles.css';
 
 class SVG extends Component {
@@ -20,7 +20,9 @@ class SVG extends Component {
 		addPoint: PropTypes.func.isRequired,
 		drag: PropTypes.func.isRequired,
 		handleMouseMove: PropTypes.func.isRequired,
-		propRef: PropTypes.object.isRequired
+		propRef: PropTypes.object.isRequired,
+		layout: PropTypes.object.isRequired,
+		scale: PropTypes.number.isRequired
 	}
 
 	render() {
@@ -34,9 +36,12 @@ class SVG extends Component {
 			fillPath,
 			addPoint,
 			drag,
-			handleMouseMove
+			handleMouseMove,
+			scale,
+			layout: {properties: {x, y, scaleX, scaleY}}
 		} = this.props;
-
+		const lx = getPX(x);
+		const ly = getPX(y);
 		let circles = points.map((point, index, _points) => {
 			let anchors = [],
 				previous = false;
@@ -50,12 +55,12 @@ class SVG extends Component {
 					<Quadratic
 						key={ `q_${ index }` }
 						index={ index }
-						p1x={ previous.x }
-						p1y={ previous.y }
-						p2x={ point.x }
-						p2y={ point.y }
-						x={ point.quadratic.x }
-						y={ point.quadratic.y }
+						p1x={ previous.x + lx }
+						p1y={ previous.y + ly }
+						p2x={ point.x + lx }
+						p2y={ point.y + ly }
+						x={ point.quadratic.x + lx }
+						y={ point.quadratic.y + ly }
 						t={ previous.quadratic && point.quadratic.t }
 						drag={ drag } />
 				);
@@ -64,14 +69,14 @@ class SVG extends Component {
 					<Cubic
 						key={ `c_${ index }` }
 						index={ index }
-						p1x={ previous.x }
-						p1y={ previous.y }
-						p2x={ point.x }
-						p2y={ point.y }
-						x1={ point.cubic.x1 }
-						y1={ point.cubic.y1 }
-						x2={ point.cubic.x2 }
-						y2={ point.cubic.y2 }
+						p1x={ previous.x + lx }
+						p1y={ previous.y + ly }
+						p2x={ point.x + lx }
+						p2y={ point.y + ly }
+						x1={ point.cubic.x1 + lx }
+						y1={ point.cubic.y1 + ly }
+						x2={ point.cubic.x2 + lx }
+						y2={ point.cubic.y2 + ly }
 						s={ previous.cubic && point.cubic.s }
 						drag={ drag } />
 				);
@@ -83,11 +88,12 @@ class SVG extends Component {
 					className={ cx('ad-PointGroup', {
 						'ad-PointGroup--first': (index === 0),
 						'is-active': (activePoint === index),
-					}) }>
+					}) }
+				>
 					<Point
 						index={ index }
-						x={ point.x }
-						y={ point.y }
+						x={ point.x + lx}
+						y={ point.y + ly}
 						drag={ drag } />
 
 					{ anchors }
@@ -107,13 +113,15 @@ class SVG extends Component {
 					w={ w }
 					h={ h }
 					grid={ grid } />
-
-				<path
-					className={ cx('ad-Path', { 'ad-Path--filled': fillPath }) }
-					d={ path } />
-				<g className="ad-Points">
-					{ circles }
+				<g transform={`scale(${scale * scaleX} ${scale * scaleY})`}>
+					<path transform={`translate(${lx} ${ly})`}
+						className={ cx('ad-Path', { 'ad-Path--filled': fillPath }) }
+						d={ path } />
+					<g className="ad-Points">
+						{ circles }
+					</g>
 				</g>
+				
 			</svg>
 		);
 	}

@@ -13,43 +13,24 @@ import Portal from '../../../containers/editTemplate/components/Layouts/Portal';
 
 
 import './Builder/styles.css';
+import { getPX } from '../../../containers/editTemplate/utils';
 
 class SVGPathBuilder extends Component {
 	static propTypes = {
 		initialPoints: PropTypes.array.isRequired,
-		initialClosePath: PropTypes.bool.isRequired,
+		h: PropTypes.number.isRequired,
+		w: PropTypes.number.isRequired,
+		gridSize: PropTypes.number.isRequired,
 		onChange: PropTypes.func.isRequired,
 		layout: PropTypes.object.isRequired,
-		pathData: PropTypes.shape({
-			w: PropTypes.number,
-			h: PropTypes.number,
-			ctrl: PropTypes.bool,
-			activePoint: PropTypes.number,
-			isDragging: PropTypes.any,
-			fillPath: PropTypes.bool,
-			grid: PropTypes.shape({
-				show: PropTypes.bool,
-				snap: PropTypes.bool,
-				size: PropTypes.number,
-			}),
-			points: PropTypes.array,
-			closePath: PropTypes.bool,
-			path: PropTypes.string,
-			pointsInitated: PropTypes.bool,
-			initiate: PropTypes.bool
-		})
+		scale: PropTypes.number
 	}
 	
 	constructor(props) {
 		super(props);
 		this.svg = React.createRef();
 		this.portalRef = React.createRef();
-	}
-
-	static defaultProps = {
-		pathData: {
-			w: 1000,
-			h: 800,
+		this.state = {
 			ctrl: false,
 			activePoint: 0,
 			isDragging: false,
@@ -57,25 +38,20 @@ class SVGPathBuilder extends Component {
 			grid: {
 				show: true,
 				snap: true,
-				size: 20,
+				size: props.gridSize,
 			},
-			points: null,
+			points: props.initialPoints,
 			closePath: false,
-			path: '',//getPath(this.props.initialPoints, this.props.initialClosePath)
-			pointsInitated: false,
-			initiate: true
-		}
+			path: this.handlePathChange(props.initialPoints, false)
+		};
 	}
+
+	
+	
 
 	componentDidMount() {
 		document.addEventListener('keydown', this.handleKeyDown, false);
 		document.addEventListener('keyup', this.handleKeyUp, false);
-		const {clientWidth, clientHeight} = document.getElementById('templateDiv');
-		const w = this.props.layout.properties.scaleX * clientWidth;
-		const h = this.props.layout.properties.scaleY * clientHeight;
-		const points = this.props.pathData.points || this.props.initialPoints;
-		const path = this.props.pathData.path || getPath(this.props.initialPoints, this.props.initialClosePath);
-		this.handleChange({points, path, w, h});
 	}
 
 	componentWillUnmount() {
@@ -84,10 +60,16 @@ class SVGPathBuilder extends Component {
 	}
 
 	handleChange = (newValues) => {
+		this.setState(newValues);
+	}
+
+	handlePathChange = (points, closePath) => {
 		const {onChange} = this.props;
+		const path = getPath(points,closePath);
 		if(onChange) {
-			onChange({...this.props.pathData, ...newValues});
+			onChange({points, path});
 		}
+		return path;
 	}
 
 	handleKeyDown = (e) => {
@@ -131,12 +113,12 @@ class SVGPathBuilder extends Component {
 	 * Path parameters
 	 */
 	setClosePath = (e) => {
-		const { points } = this.props.pathData,
+		const { points } = this.state,
 			closePath = e.target.checked;
 
 		this.handleChange({
 			closePath,
-			path: getPath(points, closePath),
+			path: this.handlePathChange(points, closePath),
 		});
 	}
 
@@ -148,15 +130,15 @@ class SVGPathBuilder extends Component {
 	 * Grid parameters
 	 */
 	setGridSize = (e) => {
-		let grid = this.props.pathData.grid;
+		let grid = this.state.grid;
 
-		grid.size = rangeGrid(positive(e.target.value), 1, Math.min(this.props.pathData.w, this.props.pathData.h));
+		grid.size = rangeGrid(positive(e.target.value), 1, Math.min(this.props.w, this.props.h));
 
 		this.handleChange({ grid });
 	}
 
 	setGridSnap = (e) => {
-		let grid = this.props.pathData.grid;
+		let grid = this.state.grid;
 
 		grid.snap = e.target.checked;
 
@@ -164,7 +146,7 @@ class SVGPathBuilder extends Component {
 	}
 
 	setGridShow = (e) => {
-		let grid = this.props.pathData.grid;
+		let grid = this.state.grid;
 
 		grid.show = e.target.checked;
 
@@ -172,9 +154,11 @@ class SVGPathBuilder extends Component {
 	}
 
 	getMouseCoords = (e) => {
+		const {scale, layout: {properties: {x: lx, y: ly, scaleY = 1, scaleX = 1}}} = this.props;
 		const { left, top } = this.svg.current.getBoundingClientRect(),
-			{ size, snap } = this.props.pathData.grid;
-
+			{ size, snap } = this.state.grid;
+		const calcLX = getPX(lx, scaleX);
+		const calcLY = getPX(ly, scaleY);
 		let x = Math.round(e.pageX - left),
 			y = Math.round(e.pageY - top);
 
@@ -182,8 +166,7 @@ class SVGPathBuilder extends Component {
 			x = size * Math.round(x / size);
 			y = size * Math.round(y / size);
 		}
-
-		return { x, y };
+		return { x: (x/scale - calcLX), y: (y/scale - calcLY) };
 	}
 
 	resetNextCurve = (points, active) => {
@@ -204,7 +187,7 @@ class SVGPathBuilder extends Component {
 	 * Default point values
 	 */
 	setPointType = (e) => {
-		let { points, activePoint, closePath } = this.props.pathData;
+		let { points, activePoint, closePath } = this.state;
 
 		// not the first point
 		if (activePoint !== 0) {
@@ -237,19 +220,19 @@ class SVGPathBuilder extends Component {
 
 			this.handleChange({
 				points,
-				path: getPath(points, closePath),
+				path: this.handlePathChange(points, closePath),
 			});
 		}
 	}
 
 	setPointPosition = (coord, e) => {
-		let coords = this.props.pathData.points[this.props.pathData.activePoint],
+		let coords = this.state.points[this.state.activePoint],
 			v = positive(e.target.value);
 
-		if (coord === 'x' && v > this.props.pathData.w) {
-			v = this.props.pathData.w;
-		} else if (coord === 'y' && v > this.props.pathData.h) {
-			v = this.props.pathData.h;
+		if (coord === 'x' && v > this.props.w) {
+			v = this.props.w;
+		} else if (coord === 'y' && v > this.props.h) {
+			v = this.props.h;
 		}
 
 		coords[coord] = v;
@@ -258,25 +241,25 @@ class SVGPathBuilder extends Component {
 	}
 
 	setPointCoords = (coords) => {
-		const { points, activePoint, closePath } = this.props.pathData;
+		const { points, activePoint, closePath } = this.state;
 
 		points[activePoint].x = coords.x;
 		points[activePoint].y = coords.y;
 
 		this.handleChange({
 			points,
-			path: getPath(points, closePath),
+			path: this.handlePathChange(points, closePath),
 		});
 	}
 
 	setQuadraticPosition = (coord, e) => {
-		let coords = this.props.pathData.points[this.props.pathData.activePoint].quadratic,
+		let coords = this.state.points[this.state.activePoint].quadratic,
 			v = positive(e.target.value);
 
-		if (coord === 'x' && v > this.props.pathData.w) {
-			v = this.props.pathData.w;
-		} else if (coord === 'y' && v > this.props.pathData.h) {
-			v = this.props.pathData.h;
+		if (coord === 'x' && v > this.props.w) {
+			v = this.props.w;
+		} else if (coord === 'y' && v > this.props.h) {
+			v = this.props.h;
 		}
 
 		coords[coord] = v;
@@ -285,30 +268,30 @@ class SVGPathBuilder extends Component {
 	}
 
 	setQuadraticCoords = (coords) => {
-		const { points, activePoint, closePath } = this.props.pathData;
+		const { points, activePoint, closePath } = this.state;
 
 		points[activePoint].quadratic.x = coords.x;
 		points[activePoint].quadratic.y = coords.y;
 
 		this.handleChange({
 			points,
-			path: getPath(points, closePath),
+			path: this.handlePathChange(points, closePath),
 		});
 	}
 
 	setQuadraticT = (e) => {
-		const { points, activePoint, closePath } = this.props.pathData;
+		const { points, activePoint, closePath } = this.state;
 
 		points[activePoint].quadratic.t = e.target.checked;
 
 		this.handleChange({
 			points,
-			path: getPath(points, closePath),
+			path: this.handlePathChange(points, closePath),
 		});
 	}
 
 	setCubicPosition = (coord, e) => {
-		let coords = this.props.pathData.points[this.props.pathData.activePoint].cubic;
+		let coords = this.state.points[this.state.activePoint].cubic;
 		let	v = positive(e.target.value);
 
 		if (coord === 'x1') {
@@ -341,7 +324,7 @@ class SVGPathBuilder extends Component {
 	}
 
 	setCubicCoords = (coords, n) => {
-		const { points, activePoint, closePath } = this.props.pathData;
+		const { points, activePoint, closePath } = this.state;
 
 		if (n === 1) {
 			points[activePoint].cubic.x1 = coords.x;
@@ -355,23 +338,23 @@ class SVGPathBuilder extends Component {
 
 		this.handleChange({
 			points,
-			path: getPath(points, closePath),
+			path: this.handlePathChange(points, closePath),
 		});
 	}
 
 	setCubicS = (e) => {
-		const { points, activePoint, closePath } = this.props.pathData;
+		const { points, activePoint, closePath } = this.state;
 
 		points[activePoint].cubic.s = e.target.checked;
 
 		this.handleChange({
 			points,
-			path: getPath(points, closePath),
+			path: this.handlePathChange(points, closePath),
 		});
 	}
 
 	setArcParam = (param, e) => {
-		const { points, activePoint, closePath } = this.props.pathData;
+		const { points, activePoint, closePath } = this.state;
 
 		let v;
 
@@ -385,14 +368,14 @@ class SVGPathBuilder extends Component {
 
 		this.handleChange({
 			points,
-			path: getPath(points, closePath),
+			path: this.handlePathChange(points, closePath),
 		});
 	}
 
 	drag = (e, index, object = 'point', n = false) => {
 		e.preventDefault();
 
-		if ( ! this.props.pathData.ctrl) {
+		if ( ! this.state.ctrl) {
 			const newState = {
 				activePoint: index,
 				isDragging: { object, n },
@@ -408,13 +391,13 @@ class SVGPathBuilder extends Component {
 	}
 
 	addPoint = (e) => {
-		if (this.props.pathData.ctrl) {
+		if (this.state.ctrl) {
 			const coords = this.getMouseCoords(e),
-				{ points, closePath } = this.props.pathData;
+				{ points, closePath } = this.state;
 
 			points.push(coords);
 
-			const path = getPath(points, closePath);
+			const path = this.handlePathChange(points, closePath);
 			const newState = {
 				points,
 				path,
@@ -428,7 +411,7 @@ class SVGPathBuilder extends Component {
 	}
 
 	removeActivePoint = () => {
-		let { points, activePoint, closePath } = this.props.pathData;
+		let { points, activePoint, closePath } = this.state;
 
 		if (points.length > 1 && activePoint !== 0) {
 			points = this.resetNextCurve(points, activePoint);
@@ -436,7 +419,7 @@ class SVGPathBuilder extends Component {
 
 			this.handleChange({
 				points,
-				path: getPath(points, closePath),
+				path: this.handlePathChange(points, closePath),
 				activePoint: points.length - 1,
 			});
 		}
@@ -445,8 +428,8 @@ class SVGPathBuilder extends Component {
 	handleMouseMove = (e) => {
 		e.preventDefault();
 
-		if ( ! this.props.pathData.ctrl) {
-			let { object, n } = this.props.pathData.isDragging;
+		if ( ! this.state.ctrl) {
+			let { object, n } = this.state.isDragging;
 
 			switch (object) {
 			case 'point':
@@ -467,10 +450,10 @@ class SVGPathBuilder extends Component {
 	}
 
 	reset = () => {
-		const { w, h } = this.props.pathData,
+		const { w, h } = this.state,
 			points = [{ x: w / 2, y: h / 2 }],
 			closePath = false,
-			path = getPath(points, closePath);
+			path = this.handlePathChange(points, closePath);
 
 		this.handleChange({
 			points,
@@ -481,7 +464,7 @@ class SVGPathBuilder extends Component {
 	}
 
 	render() {
-		if (!this.props.pathData.points) return null;
+		if (!this.state.path) return null;
 		return (
 			<div
 				className="ad-Builder"
@@ -493,16 +476,21 @@ class SVGPathBuilder extends Component {
 							position: 'absolute',
 							top: 0,
 							left: 0,
-							width: this.props.pathData.w,
-							height: this.props.pathData.h
+							width: this.props.w,
+							height: this.props.h,
 						}}
+						
 						onMouseUp={ this.cancelDragging }
 					>
 						<div className="ad-Builder-main">
 							<div className="ad-Builder-svg">
 								<SVG
 									propRef={this.svg}
-									{ ...this.props.pathData }
+									{ ...this.state }
+									w={this.props.w}
+									h={this.props.h}
+									scale={this.props.scale}
+									layout={this.props.layout}
 									drag={ this.drag }
 									addPoint={ this.addPoint }
 									handleMouseMove={ this.handleMouseMove } />
@@ -517,7 +505,9 @@ class SVGPathBuilder extends Component {
 				>
 					<div className="ad-Builder-controls">
 						<Controls
-							{ ...this.props.pathData }
+							{ ...this.state }
+							w={this.props.w}
+							h={this.props.h}
 							reset={ this.reset }
 							removeActivePoint={ this.removeActivePoint }
 							setPointPosition={ this.setPointPosition }

@@ -32,7 +32,7 @@ export default class CanvasTextPath extends React.Component {
 
 	render() {
 		const {gradientData, pathData} = this.props;
-		const path = (pathData && pathData.path) || `M ${0} ${0} L ${400} ${0}`;
+		const path = (pathData && pathData.path) || `M ${0} ${0} L ${100} ${0}`;
 		const shapes = [
 			<TextPath key={`textPath-${this.props.name}`}
 				{...this.props}

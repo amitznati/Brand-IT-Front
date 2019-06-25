@@ -366,9 +366,6 @@ class Builder extends Component {
 
 	cancelDragging = () => {
 		this.setState({ isDragging: false });
-		if (this.props.onChange) {
-			this.props.onChange({...this.state, isDragging: false});
-		}
 	}
 
 	addPoint = (e) => {
