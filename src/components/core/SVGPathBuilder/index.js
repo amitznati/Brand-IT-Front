@@ -154,17 +154,18 @@ class SVGPathBuilder extends Component {
 	}
 
 	getMouseCoords = (e) => {
-		const {scale, layout: {properties: {x: lx, y: ly, scaleY = 1, scaleX = 1}}} = this.props;
+		const {w, scale, layout: {properties: {x: lx, y: ly, scaleY = 1, scaleX = 1}}} = this.props;
 		const { left, top } = this.svg.current.getBoundingClientRect(),
-			{ size, snap } = this.state.grid;
+			{ grid: {size, snap}} = this.state;
+		const spacing = w / size;
 		const calcLX = getPX(lx, scaleX);
 		const calcLY = getPX(ly, scaleY);
 		let x = Math.round(e.pageX - left),
 			y = Math.round(e.pageY - top);
-
+		
 		if (snap) {
-			x = size * Math.round(x / size);
-			y = size * Math.round(y / size);
+			x = spacing * Math.round(x / spacing);
+			y = spacing * Math.round(y / spacing);
 		}
 		return { x: (x/scale - calcLX), y: (y/scale - calcLY) };
 	}
