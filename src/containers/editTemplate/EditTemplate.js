@@ -78,7 +78,7 @@ class EditTemplate extends React.Component {
 		selectedLayout: null,
 		isAddOpen: false,
 		selectedLayoutIndex: -1,
-		scale: 0.8,
+		scale: 0.5,
 		allFontsLoaded: false,
 		isSVGPathBuilderOpen: false
 	};

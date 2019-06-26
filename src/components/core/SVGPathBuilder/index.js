@@ -158,8 +158,9 @@ class SVGPathBuilder extends Component {
 		const { left, top } = this.svg.current.getBoundingClientRect(),
 			{ grid: {size, snap}} = this.state;
 		const spacing = w / size;
-		const calcLX = getPX(lx, scaleX);
-		const calcLY = getPX(ly, scaleY);
+		const calcLX = getPX(lx);
+		const calcLY = getPX(ly);
+		//const translateX = scaleX > 1 ? (calcLX/scaleX) + calcLX : calcLX;
 		let x = Math.round(e.pageX - left),
 			y = Math.round(e.pageY - top);
 		
@@ -167,7 +168,7 @@ class SVGPathBuilder extends Component {
 			x = spacing * Math.round(x / spacing);
 			y = spacing * Math.round(y / spacing);
 		}
-		return { x: (x/scale - calcLX), y: (y/scale - calcLY) };
+		return { x: (x/(scale) - calcLX)/scaleX, y: (y/scale - calcLY)/scaleY };
 	}
 
 	resetNextCurve = (points, active) => {

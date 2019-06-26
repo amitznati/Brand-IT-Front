@@ -42,6 +42,8 @@ class SVG extends Component {
 		} = this.props;
 		const lx = getPX(x);
 		const ly = getPX(y);
+		const translateX = scaleX > 1 ? (lx/scaleX) - lx : 0;
+		const translateY = scaleY > 1 ? (ly/scaleY) - ly : 0;
 		let circles = points.map((point, index, _points) => {
 			let anchors = [],
 				previous = false;
@@ -113,7 +115,11 @@ class SVG extends Component {
 					w={ w }
 					h={ h }
 					grid={ grid } />
-				<g transform={`scale(${scale * scaleX} ${scale * scaleY})`}>
+				<g 
+					transform={`
+					scale(${scale * scaleX} ${scale * scaleY}) 
+					translate(${translateX} ${translateY})
+					`} >
 					<path transform={`translate(${lx} ${ly})`}
 						className={ cx('ad-Path', { 'ad-Path--filled': fillPath }) }
 						d={ path } />
