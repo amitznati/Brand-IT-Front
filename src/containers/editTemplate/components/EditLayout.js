@@ -171,12 +171,12 @@ class EditLayout extends React.Component {
 		layout.properties.fill = {
 			gradientData: {...data, palette: layoutPalette},
 			fill: '',
-			fillPriority: 'linear-gradient',
+			fillPriority: `${data.gradientType.toLowerCase()}-gradient`,
 			[`fill${data.gradientType}GradientEndPoint`]: {x: EndX, y: EndY},
 			[`fill${data.gradientType}GradientStartPoint`]: {x: StartX, y: StartY},
 			[`fill${data.gradientType}GradientColorStops`]: stops,
-			fillRadialGradientEndRadius: data.EndRadius,
-			fillRadialGradientStartRadius: data.StartRadius,
+			fillRadialGradientEndRadius: data.gradientType === 'Radial' ? data.EndRadius : undefined,
+			fillRadialGradientStartRadius: data.gradientType === 'Radial' ?data.StartRadius: undefined,
 		};
 		onUpdate(layout);
 	};

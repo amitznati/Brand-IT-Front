@@ -71,10 +71,12 @@ class TemplatePreview extends React.Component {
 			<URLImage
 				key={index}
 				src={p.src}
-				x={this.getPX(p.x)}
-				y={this.getPX(p.y)}
-				height={this.getPX(p.height)}
-				width={this.getPX(p.width)}
+				x={getPX(p.x)}
+				y={getPX(p.y)}
+				height={getPX(p.height)}
+				width={getPX(p.width)}
+				scaleX={p.scaleX}
+				scaleY={p.scaleY}
 				rotation={p.rotation}
 				name={`${index}`}
 				onUpdateNode={this.onUpdateNode}

@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextPath, useStrictMode, Line, Circle } from 'react-konva';
+import { TextPath, useStrictMode} from 'react-konva';
+import GradientShapes from './GradientShapes';
 
 useStrictMode(true);
 export default class CanvasTextPath extends React.Component {
@@ -9,34 +10,14 @@ export default class CanvasTextPath extends React.Component {
 	static propTypes = {
 		onUpdateNode: PropTypes.func
 	}
-	renderLine = () => {
-		const {x, y, gradientData, name} = this.props;
-		const {StartX, StartY, EndX, EndY} = gradientData;
-		return (
-			[<Line key={`line-${name}`}
-				x={x}
-				y={y}
-				points={[StartX, StartY, EndX, EndY]}
-				stroke="black"
-			/>,
-			<Circle
-				key={`circle-${name}`}
-				x={(x + EndX)}
-				y={(y + EndY)}
-				radius={5}
-				fill='black'
-			/>
-			]
-		);
-	};
 
 	render() {
 		const {gradientData, pathData} = this.props;
 		const path = (pathData && pathData.path) || `M ${0} ${0} L ${100} ${0}`;
 		const shapes = [
-			<TextPath key={`textPath-${this.props.name}`}
+			<TextPath 
+				key={`textPath-${this.props.name}`}
 				{...this.props}
-				
 				ref={node => {
 					this.textPathNode = node;
 				}}
@@ -46,7 +27,7 @@ export default class CanvasTextPath extends React.Component {
 			/>
 		];
 		if (gradientData && gradientData.gradientPointsOnFocus) {
-			shapes.push(...this.renderLine());
+			shapes.push(<GradientShapes {...this.props} />);
 		}
 		return shapes;
 	}

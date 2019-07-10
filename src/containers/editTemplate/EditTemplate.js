@@ -40,7 +40,7 @@ const layoutsTemplate = (type,payload) => {
 			type: 'image',
 			properties: {
 				src: payload.url,
-				x:8,y:8,height: 5,width:5, rotation: 0
+				x:8,y:8,height: 5,width:5, rotation: 0, scaleX: 1, scaleY: 1
 			}
 		};
 	case 'text': 
@@ -86,7 +86,7 @@ class EditTemplate extends React.Component {
 	componentDidMount() {
 		let {template} = this.state;
 
-		template.layouts.push(layoutsTemplate('textPath','what\'s up'));
+		template.layouts.push(layoutsTemplate('textPath','All the worlds a stage, and all the men and women merely players.'));
 		this.setState({template});
 		
 	}

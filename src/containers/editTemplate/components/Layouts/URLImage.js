@@ -54,8 +54,6 @@ export default class URLImage extends React.Component {
 				}}
 				draggable
 				onDragEnd={() => this.props.onUpdateNode(this.imageNode)}
-				scaleX={1}
-				scaleY={1}
 			/>
 		);
 	}

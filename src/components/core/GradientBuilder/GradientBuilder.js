@@ -110,12 +110,13 @@ class GradientBuilder extends React.Component {
 		this.notifyChange(palette);
 	}
 
-	componentWillReceiveProps ({ palette: next, activeId }) {
+	componentDidUpdate ({ palette: prev, activeId }) {
 		const { palette: current } = this.props;
-		const length = Math.min(next.length, current.length);
+		if (prev.length === current.length) return; 
+		const length = Math.min(prev.length, current.length);
 		for (let i = 0; i < length; i++) {
-			if (next[i].pos !== current[i].pos || next[i].color !== current[i].color) {
-				this.setState({ ...toState(next, activeId) });
+			if (prev[i].pos !== current[i].pos || prev[i].color !== current[i].color) {
+				this.setState({ ...toState(current, activeId) });
 				return;
 			}
 		}
