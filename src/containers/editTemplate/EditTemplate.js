@@ -168,16 +168,15 @@ class EditTemplate extends React.Component {
 		};
 	}
 	onTogglePathBuilder = () => {
-		const {isSVGPathBuilderOpen, template, selectedLayoutIndex} = this.state;
-		template.layouts[selectedLayoutIndex].properties.rotation = 0;
-		this.setState({isSVGPathBuilderOpen: !isSVGPathBuilderOpen, template});
+		const {isSVGPathBuilderOpen} = this.state;
+		this.setState({isSVGPathBuilderOpen: !isSVGPathBuilderOpen});
 	};
 
 	renderPathBuilder = () => {
 		const {selectedLayout, product, scale} = this.state;
 		const pathData = selectedLayout && selectedLayout.properties.pathData;
 		let initialPoints = [
-			{x: 0, y: 0}, {x: 0 + 100, y: 0}
+			{x: 0, y: 0}, {x: 100, y: 0}
 		];
 		if (pathData && pathData.points) {
 			initialPoints = pathData.points;

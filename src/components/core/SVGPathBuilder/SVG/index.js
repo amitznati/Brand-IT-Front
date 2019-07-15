@@ -38,7 +38,7 @@ class SVG extends Component {
 			drag,
 			handleMouseMove,
 			scale,
-			layout: {properties: {x, y, scaleX, scaleY}}
+			layout: {properties: {x, y, scaleX, scaleY, rotation}}
 		} = this.props;
 		const lx = getPX(x);
 		const ly = getPX(y);
@@ -57,12 +57,12 @@ class SVG extends Component {
 					<Quadratic
 						key={ `q_${ index }` }
 						index={ index }
-						p1x={ previous.x + lx }
-						p1y={ previous.y + ly }
-						p2x={ point.x + lx }
-						p2y={ point.y + ly }
-						x={ point.quadratic.x + lx }
-						y={ point.quadratic.y + ly }
+						p1x={ previous.x  }
+						p1y={ previous.y  }
+						p2x={ point.x  }
+						p2y={ point.y  }
+						x={ point.quadratic.x  }
+						y={ point.quadratic.y  }
 						t={ previous.quadratic && point.quadratic.t }
 						drag={ drag } />
 				);
@@ -71,14 +71,14 @@ class SVG extends Component {
 					<Cubic
 						key={ `c_${ index }` }
 						index={ index }
-						p1x={ previous.x + lx }
-						p1y={ previous.y + ly }
-						p2x={ point.x + lx }
-						p2y={ point.y + ly }
-						x1={ point.cubic.x1 + lx }
-						y1={ point.cubic.y1 + ly }
-						x2={ point.cubic.x2 + lx }
-						y2={ point.cubic.y2 + ly }
+						p1x={ previous.x }
+						p1y={ previous.y }
+						p2x={ point.x  }
+						p2y={ point.y  }
+						x1={ point.cubic.x1  }
+						y1={ point.cubic.y1  }
+						x2={ point.cubic.x2  }
+						y2={ point.cubic.y2  }
 						s={ previous.cubic && point.cubic.s }
 						drag={ drag } />
 				);
@@ -94,8 +94,8 @@ class SVG extends Component {
 				>
 					<Point
 						index={ index }
-						x={ point.x + lx}
-						y={ point.y + ly}
+						x={ point.x }
+						y={ point.y }
 						drag={ drag } />
 
 					{ anchors }
@@ -118,9 +118,10 @@ class SVG extends Component {
 				<g 
 					transform={`
 					scale(${scale * scaleX} ${scale * scaleY}) 
-					translate(${translateX} ${translateY})
+					translate(${lx + translateX} ${ly + translateY})
+					rotate(${rotation})
 					`} >
-					<path transform={`translate(${lx} ${ly})`}
+					<path 
 						className={ cx('ad-Path', { 'ad-Path--filled': fillPath }) }
 						d={ path } />
 					<g className="ad-Points">
