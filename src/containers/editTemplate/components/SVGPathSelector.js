@@ -11,7 +11,7 @@ class SVGPathSelector extends React.Component {
 				<Typography variant="subtitle1">Path: {path}</Typography>
 				<br />
 				<Button variant="outlined" color="primary" onClick={toggleOpen}>
-					Open simple dialog
+					Open path dialog
 				</Button>
 			</div>
 		);

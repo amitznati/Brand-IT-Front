@@ -242,7 +242,14 @@ class EditLayout extends React.Component {
 	}
 
 	renderFontSelector = () => {
-		return <CoreFontSelector />;
+		return (
+			<Grid container justify="center">
+				<Grid item>
+					<CoreFontSelector />
+				</Grid>
+			</Grid>
+			
+		);
 	};
 
 	renderFontStyle = () => {
@@ -250,12 +257,10 @@ class EditLayout extends React.Component {
 			return {label: v, value: v};
 		});
 		return (
-			<div style={{margin: 8}}>
-				<CoreAutocomplete
-					options={options}
-					label="Font Style"
-				/>
-			</div>
+			<CoreAutocomplete
+				options={options}
+				label="Font Style"
+			/>
 		);
 	};
 
@@ -263,10 +268,15 @@ class EditLayout extends React.Component {
 	renderPathSelector = () => {
 		const {onTogglePathBuilder, layout} = this.props;
 		return (
-			<SVGPathSelector 
-				toggleOpen={onTogglePathBuilder}
-				path={layout.properties.pathData && layout.properties.pathData.path}
-			/>
+			<Grid container justify="center">
+				<Grid item>
+					<SVGPathSelector 
+						toggleOpen={onTogglePathBuilder}
+						path={layout.properties.pathData && layout.properties.pathData.path}
+					/>
+				</Grid>
+			</Grid>
+			
 		); 
 	};
 
