@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import DesignCanvas from './DesignCanvas';
-import URLImage from './Layouts/URLImage';
-import Text from './Layouts/Text';
-import TextPath from './Layouts/TextPath';
+import URLImage from './LayoutsKonvaJS/URLImage';
+import Text from './LayoutsKonvaJS/Text';
+import TextPath from './LayoutsKonvaJS/TextPath';
 import {getPX, getCM} from './../utils';
 const styles = theme => ({
 	templateRoot: {
@@ -85,21 +85,23 @@ class TemplatePreview extends React.Component {
 	}
 	renderText(layout, index) {
 		const p = layout.properties;
+		const {scale} = this.props;
 		return (
 			<Text 
 				key={index} 
+				pkey={index} 
 				fontFamily={p.fontFamily}
 				fontSize={(p.fontSize)}
-				fontStyle={p.fontStyle}
+				fontWeight={p.fontStyle}
 				x={getPX(p.x)}
 				y={getPX(p.y)}
-				scaleX={p.scaleX}
-				scaleY={p.scaleY}
+				transform={`rotate(${p.rotation} ${getPX(p.x)} ${getPX(p.y)}) scale(${scale})`}
+				scalex={p.scaleX}
+				scaley={p.scaleY}
 				text={p.text}
 				{...p.fill}
-				rotation={p.rotation}
 				name={`${index}`}
-				onUpdateNode={this.onUpdateNode}
+				//onUpdateNode={this.onUpdateNode}
 			/>
 		);
 	}
@@ -111,7 +113,7 @@ class TemplatePreview extends React.Component {
 				key={index} 
 				fontFamily={p.fontFamily}
 				fontSize={(p.fontSize)}
-				fontStyle={p.fontStyle}
+				fontWeight={p.fontStyle}
 				x={getPX(p.x)}
 				y={getPX(p.y)}
 				scaleX={p.scaleX}
@@ -147,9 +149,8 @@ class TemplatePreview extends React.Component {
 			<div style={{height: productH,width: productW, position: 'relative'}}>
 				<img className={classes.productImage} src={product.image} alt="product" style={{height: productH,width: productW}}/>
 				<div id="templateDiv" style={{height: templateH,width: templateW, position: 'absolute', overflow: 'hidden', bottom: templateY, left: templateX}}>
-					{/* {layouts.map((l,i) => this.renderLayout[l.type](l,i))} */}
 					<DesignCanvas
-						onUpdateNode={this.onUpdateNode}
+						//onUpdateNode={this.onUpdateNode}
 						onLayoutClick={this.props.onLayoutClick}
 						onEditLayoutEnd={this.props.onEditLayoutEnd}
 						selectedLayoutIndex={this.props.selectedLayoutIndex}

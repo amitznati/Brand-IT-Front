@@ -9,7 +9,7 @@ import { getPath } from './utils/path';
 
 import SVG from './SVG';
 import Controls from './Controls';
-import Portal from '../../../containers/editTemplate/components/Layouts/Portal';
+import Portal from '../../../containers/editTemplate/components/LayoutsKonvaJS/Portal';
 
 
 import './Builder/styles.css';
